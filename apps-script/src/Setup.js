@@ -25,10 +25,12 @@ function setup() {
     report.push('seed: ' + (seeded.length ? seeded.join(', ') : 'tidak ada (data sudah ada)'));
 
     // Hapus sheet bawaan yang kosong ("Sheet1" / "Lembar1")
+    // Catat nama SEBELUM menghapus: objek sheet yang sudah dihapus tidak bisa dibaca lagi.
     ss.getSheets().forEach(function (sh) {
-      if (SHEET_ORDER.indexOf(sh.getName()) === -1 && sh.getLastRow() === 0 && ss.getSheets().length > 1) {
+      var name = sh.getName();
+      if (SHEET_ORDER.indexOf(name) === -1 && sh.getLastRow() === 0 && ss.getSheets().length > 1) {
         ss.deleteSheet(sh);
-        report.push('hapus sheet kosong: ' + sh.getName());
+        report.push('hapus sheet kosong: ' + name);
       }
     });
   });

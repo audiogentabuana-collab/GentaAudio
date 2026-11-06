@@ -28,6 +28,10 @@ describe('setup()', () => {
     expect(header.slice(-4)).toEqual(['sort_order', 'is_active', 'created_at', 'updated_at']);
   });
 
+  it('menghapus sheet bawaan kosong ("Sheet1") tanpa error', () => {
+    expect(gas.spreadsheet.getSheetByName('Sheet1')).toBeNull();
+  });
+
   it('idempoten: dijalankan dua kali tidak menggandakan seed', () => {
     const before = gas.call('packages.list', { includeInactive: true }).data as unknown[];
     gas.run('setup');

@@ -73,17 +73,28 @@ class FakeRange {
 
 class FakeSheet {
   data: Cell[][] = [];
-  constructor(private name: string) {}
+  deleted = false;
+  constructor(
+    private name: string,
+    private sheetId = 0,
+  ) {}
+  /** Seperti Google: sheet yang sudah dihapus melempar error saat dipakai. */
+  private alive() {
+    if (this.deleted) throw new Error(`Sheet ${this.sheetId} tak ditemukan`);
+  }
   getName() {
+    this.alive();
     return this.name;
   }
   getLastRow() {
+    this.alive();
     for (let i = this.data.length - 1; i >= 0; i--) {
       if ((this.data[i] || []).some((c) => c !== '' && c !== undefined)) return i + 1;
     }
     return 0;
   }
   getLastColumn() {
+    this.alive();
     let max = 0;
     this.data.forEach((row) => {
       for (let i = (row || []).length - 1; i >= 0; i--) {
@@ -96,16 +107,20 @@ class FakeSheet {
     return max;
   }
   getMaxRows() {
+    this.alive();
     return Math.max(1000, this.data.length);
   }
   getRange(row: number, col: number, numRows = 1, numCols = 1) {
+    this.alive();
     if (row < 1 || col < 1 || numRows < 1 || numCols < 1) throw new Error('Range tidak valid');
     return new FakeRange(this, row, col, numRows, numCols);
   }
   deleteRow(i: number) {
+    this.alive();
     this.data.splice(i - 1, 1);
   }
   setFrozenRows() {
+    this.alive();
     return this;
   }
 }
@@ -118,8 +133,9 @@ class FakeSpreadsheet {
   getSheetByName(name: string) {
     return this.sheets.get(name) ?? null;
   }
+  private nextSheetId = 0;
   insertSheet(name: string) {
-    const s = new FakeSheet(name);
+    const s = new FakeSheet(name, this.nextSheetId++);
     this.sheets.set(name, s);
     return s;
   }
@@ -128,6 +144,7 @@ class FakeSpreadsheet {
   }
   deleteSheet(s: FakeSheet) {
     this.sheets.delete(s.getName());
+    s.deleted = true;
   }
 }
 
@@ -193,6 +210,8 @@ export function createGasRuntime(
     }),
   );
   const spreadsheet = new FakeSpreadsheet();
+  // Spreadsheet baru dari Google selalu punya satu sheet kosong bawaan (id 0).
+  spreadsheet.insertSheet('Sheet1');
   const cache = new Map<string, { v: string; exp: number }>();
   const files = new Map<string, FakeFile>();
   const mail: unknown[] = [];
