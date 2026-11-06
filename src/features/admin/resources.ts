@@ -105,9 +105,9 @@ export const RESOURCES: ResourceDef[] = [
   {
     name: 'equipment',
     slug: 'peralatan',
-    label: 'Peralatan (sewa satuan)',
+    label: 'Peralatan',
     singular: 'Peralatan',
-    description: 'Alat yang bisa disewa satuan. Tampil di bawah Pricelist.',
+    description: 'Alat yang bisa disewa satuan (tanpa paket). Tampil di bawah Pricelist.',
     icon: Wrench,
     titleField: 'name',
     imageField: 'image_id',

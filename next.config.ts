@@ -3,6 +3,9 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: {
+    // Set NEXT_IMAGE_UNOPTIMIZED=true bila kuota Image Optimization Vercel habis.
+    // Gambar tetap tampil langsung dari Google Drive (sudah di-resize maks 1600px).
+    unoptimized: process.env.NEXT_IMAGE_UNOPTIMIZED === 'true',
     // Gambar disimpan di Google Drive dan ditampilkan via endpoint thumbnail.
     // drive.google.com/thumbnail me-redirect ke lh3.googleusercontent.com.
     remotePatterns: [

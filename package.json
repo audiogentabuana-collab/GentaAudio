@@ -13,11 +13,12 @@
     "test:e2e": "playwright test",
     "hash-password": "node scripts/hash-password.mjs",
     "gen-secret": "node -e \"console.log(require('crypto').randomBytes(48).toString('base64url'))\"",
-    "gas:push": "cd apps-script && clasp push",
-    "gas:deploy": "cd apps-script && clasp deploy"
+    "gas:push": "cd apps-script && npx -y @google/clasp@3.4.1 push",
+    "gas:login": "npx -y @google/clasp@3.4.1 login",
+    "gas:deployments": "cd apps-script && npx -y @google/clasp@3.4.1 list-deployments",
+    "gas:redeploy": "cd apps-script && npx -y @google/clasp@3.4.1 create-deployment -i"
   },
   "dependencies": {
-    "clsx": "^2.1.1",
     "jose": "^6.2.15",
     "lucide-react": "^1.70.0",
     "next": "^16.4.5",
@@ -38,5 +39,8 @@
     "tailwindcss": "^4.3.4",
     "typescript": "^6.0.3",
     "vitest": "^5.1.0"
+  },
+  "engines": {
+    "node": ">=20.9"
   }
 }
