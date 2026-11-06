@@ -16,7 +16,8 @@
     "gas:push": "cd apps-script && npx -y @google/clasp@3.4.1 push",
     "gas:login": "npx -y @google/clasp@3.4.1 login",
     "gas:deployments": "cd apps-script && npx -y @google/clasp@3.4.1 list-deployments",
-    "gas:redeploy": "cd apps-script && npx -y @google/clasp@3.4.1 create-deployment -i"
+    "gas:redeploy": "cd apps-script && npx -y @google/clasp@3.4.1 create-deployment -i",
+    "gas:bundle": "node scripts/bundle-apps-script.mjs"
   },
   "dependencies": {
     "jose": "^6.2.15",

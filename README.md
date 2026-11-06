@@ -129,14 +129,26 @@ Lakukan dengan akun Google milik usaha. Akun inilah yang menjadi "pemilik" data 
 
 ### 3.3 Buat proyek Apps Script
 
-Pilih **salah satu** cara berikut.
+Pilih **salah satu** cara berikut. Untuk yang belum terbiasa dengan terminal, pakai **Cara A**.
 
-**Cara A — pakai clasp (disarankan untuk developer)**
+**Cara A — copy-paste 1 file (paling mudah, tanpa terminal)**
 
-1. Aktifkan Apps Script API di https://script.google.com/home/usersettings (set ke **On**).
+1. Buka https://script.google.com, klik **Proyek baru**. Klik judul "Proyek tanpa judul" di kiri atas, lalu ganti menjadi **Genta Buana API**.
+2. Klik ikon **roda gigi (Setelan proyek)** di menu kiri. Centang **Tampilkan file manifes "appsscript.json" di editor**.
+3. Klik ikon **< > (Editor)** di menu kiri. Sekarang ada dua file: `Code.gs` dan `appsscript.json`.
+4. Buka file [`apps-script/dist/Code.gs`](apps-script/dist/Code.gs) di GitHub dan klik tombol **Copy raw file**. Di editor, klik `Code.gs`, hapus semua isinya, tempel, lalu tekan **Ctrl+S**.
+5. Buka [`apps-script/src/appsscript.json`](apps-script/src/appsscript.json) dengan cara yang sama. Di editor, klik `appsscript.json`, ganti seluruh isinya, lalu tekan **Ctrl+S**.
+
+Cara ini **tidak membutuhkan** "Apps Script API", Script ID, maupun clasp. Saat kode diperbarui nanti, ulangi langkah 4 lalu perbarui deployment (bagian 4.2).
+
+> Untuk developer: `apps-script/dist/Code.gs` dibuat otomatis dari `apps-script/src/` dengan `npm run gas:bundle`. Unit test gagal bila file ini tidak sinkron.
+
+**Cara B — pakai clasp (untuk developer, via terminal)**
+
+1. Aktifkan Apps Script API di https://script.google.com/home/usersettings (set ke **On**). Ini memberi izin clasp mengirim kode ke akun Google Anda.
 2. Buka https://script.google.com, lalu buat **Proyek baru** dengan nama **Genta Buana API**.
 3. Buka **Project Settings** (ikon roda gigi) dan salin **Script ID**.
-4. Di repo ini, salin file contoh konfigurasi clasp lalu isi `scriptId`:
+4. Di repo ini, salin file contoh konfigurasi clasp, lalu buka `apps-script/.clasp.json` dan ganti `ISI_DENGAN_SCRIPT_ID_ANDA` dengan Script ID tersebut:
 
 ```bash
 cp apps-script/.clasp.json.example apps-script/.clasp.json
@@ -153,12 +165,6 @@ npm run gas:push
 ```
 
    `push` akan menimpa file di editor online, termasuk manifest `appsscript.json`.
-
-**Cara B — copy-paste manual (tanpa terminal)**
-
-1. Buat proyek baru di https://script.google.com.
-2. Buka **Project Settings**, lalu centang **Show "appsscript.json" manifest file in editor**.
-3. Untuk setiap file di `apps-script/src/` (termasuk isi folder `handlers/`), buat file dengan nama yang sama di editor lalu salin isinya. Ganti juga isi `appsscript.json`.
 
 ### 3.4 Isi Script Properties
 

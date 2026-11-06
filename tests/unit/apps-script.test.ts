@@ -303,3 +303,24 @@ describe('public.snapshot & dashboard', () => {
     expect(s.packages.total).toBe(6);
   });
 });
+
+describe('bundle copy-paste (apps-script/dist/Code.gs)', () => {
+  it('selalu sinkron dengan apps-script/src (jalankan `npm run gas:bundle` bila gagal)', async () => {
+    const fs = await import('node:fs');
+    // @ts-expect-error modul .mjs tanpa deklarasi tipe
+    const { buildBundle } = await import('../../scripts/bundle-apps-script.mjs');
+    expect(fs.readFileSync('apps-script/dist/Code.gs', 'utf8')).toBe(buildBundle());
+  });
+
+  it('file gabungan bisa dijalankan sebagai satu script (setup + ping)', async () => {
+    const fs = await import('node:fs');
+    const os = await import('node:os');
+    const path = await import('node:path');
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'gas-bundle-'));
+    fs.copyFileSync('apps-script/dist/Code.gs', path.join(dir, 'Code.js'));
+    const rt = createGasRuntime({ quiet: true, sourceDir: dir });
+    rt.run('setup');
+    expect(rt.call('system.ping').success).toBe(true);
+    expect((rt.call('packages.list').data as unknown[]).length).toBe(6);
+  });
+});

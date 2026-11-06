@@ -57,4 +57,4 @@
 - Script Properties: `API_KEY`, `SPREADSHEET_ID`, `DRIVE_FOLDER_ID`, `ADMIN_INITIAL_USERNAME`, `ADMIN_INITIAL_PASSWORD_HASH`, `NOTIFY_EMAIL` (opsional), `CACHE_VER_*` (otomatis).
 - Perintah: `npm run dev` (pakai `.env.local` dengan `GAS_MOCK=true` untuk lokal), `npm test`, `npm run test:e2e`, `npm run typecheck` (menjalankan `next typegen` dulu untuk `PageProps`/`RouteContext`).
 - Playwright memakai browser pra-terpasang versi 1.63 (`@playwright/test` dipin 1.63.0).
-- Ubah kode Apps Script → jalankan unit test (harness memuat file asli) → `npm run gas:push` → update deployment (README 4.2), jangan buat deployment baru (URL berubah).
+- Ubah kode Apps Script → `npm run gas:bundle` (perbarui `apps-script/dist/Code.gs` untuk jalur copy-paste; ada test sinkronisasi) → jalankan unit test (harness memuat file asli) → `npm run gas:push` → update deployment (README 4.2), jangan buat deployment baru (URL berubah).
