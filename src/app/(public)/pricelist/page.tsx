@@ -45,7 +45,7 @@ export default async function PricelistPage() {
         <div className="container-page">
           <PricelistBrowser categories={snap.categories} packages={snap.packages} waLinks={waLinks} />
           {s.price_note && (
-            <p className="mt-8 flex gap-2 rounded-xl border border-ink-800 bg-ink-900 p-4 text-sm text-ink-400">
+            <p className="mt-8 flex gap-2 rounded-lg border border-ink-800 bg-ink-900 p-4 text-sm text-ink-400">
               <Info className="h-5 w-5 shrink-0 text-brand-400" aria-hidden /> {s.price_note}
             </p>
           )}
@@ -58,8 +58,8 @@ export default async function PricelistPage() {
             <SectionHeading eyebrow="Sewa satuan" title="Butuh tambahan alat?" description="Peralatan bisa disewa satuan atau ditambahkan ke paket." />
             <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {snap.equipment.map((e) => (
-                <li key={e.id} className="flex gap-4 rounded-2xl border border-ink-800 bg-ink-900 p-4">
-                  <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl">
+                <li key={e.id} className="flex gap-4 rounded-xl border border-ink-800 bg-ink-900 p-4">
+                  <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg">
                     {e.image_id ? (
                       <DriveImage fileId={e.image_id} alt={e.name} sizes="64px" />
                     ) : (

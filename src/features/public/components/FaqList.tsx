@@ -3,7 +3,7 @@ import type { Faq } from '@/features/content/types';
 
 export function FaqList({ items }: { items: Faq[] }) {
   return (
-    <div className="divide-y divide-ink-800 overflow-hidden rounded-2xl border border-ink-800 bg-ink-900">
+    <div className="divide-y divide-ink-800 overflow-hidden rounded-xl border border-ink-800 bg-ink-900">
       {items.map((f, i) => (
         <details key={f.id} className="group" open={i === 0}>
           <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 text-left font-semibold text-ink-100 hover:bg-ink-850 [&::-webkit-details-marker]:hidden">

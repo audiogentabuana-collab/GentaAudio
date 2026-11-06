@@ -16,7 +16,7 @@ export function TestimonialList({ items }: { items: Testimonial[] }) {
     <ul className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] md:mx-0 md:grid md:grid-cols-3 md:overflow-visible md:px-0">
       {items.map((t) => (
         <li key={t.id} className="w-[85%] shrink-0 snap-start md:w-auto">
-          <figure className="flex h-full flex-col rounded-2xl border border-ink-800 bg-ink-900 p-6">
+          <figure className="flex h-full flex-col rounded-xl border border-ink-800 bg-ink-900 p-6">
             <Quote className="h-8 w-8 text-brand-400/40" aria-hidden />
             <blockquote className="mt-3 flex-1 leading-relaxed text-ink-300">“{t.message}”</blockquote>
             <figcaption className="mt-5 flex items-end justify-between gap-3">

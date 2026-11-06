@@ -12,7 +12,7 @@ import { waLink } from '@/shared/lib/whatsapp';
 const initial: BookingState = { status: 'idle' };
 
 const inputCls =
-  'block w-full rounded-xl border bg-ink-950 px-4 py-3 text-base text-ink-100 placeholder:text-ink-600 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-400/30';
+  'block w-full rounded-lg border bg-ink-950 px-4 py-3 text-base text-ink-100 placeholder:text-ink-600 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-400/30';
 
 function Field({
   id,
@@ -78,7 +78,7 @@ export function BookingForm({
       ? `Halo ${businessName}, saya ${s.name} baru saja mengirim form booking untuk acara tanggal ${formatDateId(s.event_date)} di ${s.location}. Mohon konfirmasinya.`
       : `Halo ${businessName}, saya baru saja mengirim form booking.`;
     return (
-      <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-6 text-center sm:p-8" role="status">
+      <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-6 text-center sm:p-8" role="status">
         <CircleCheck className="mx-auto h-12 w-12 text-emerald-400" aria-hidden />
         <h3 className="mt-4 text-xl font-bold text-ink-100">Booking terkirim, terima kasih!</h3>
         <p className="mx-auto mt-2 max-w-md text-ink-300">
@@ -88,7 +88,7 @@ export function BookingForm({
           href={waLink(whatsapp, text)}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-6 inline-flex h-12 items-center gap-2 rounded-xl bg-[#25D366] px-6 font-bold text-[#062e16]"
+          className="mt-6 inline-flex h-12 items-center gap-2 rounded-lg bg-[#25D366] px-6 font-bold text-[#062e16]"
         >
           <WhatsAppIcon size={20} /> Konfirmasi via WhatsApp
         </a>
@@ -104,7 +104,7 @@ export function BookingForm({
   return (
     <form action={action} noValidate className="space-y-5" aria-describedby={state.message ? 'booking-message' : undefined}>
       {state.status === 'error' && state.message && (
-        <div id="booking-message" role="alert" className="flex gap-2 rounded-xl border border-red-500/40 bg-red-500/10 p-4 text-sm text-red-200">
+        <div id="booking-message" role="alert" className="flex gap-2 rounded-lg border border-red-500/40 bg-red-500/10 p-4 text-sm text-red-200">
           <CircleAlert className="h-5 w-5 shrink-0" aria-hidden /> {state.message}
         </div>
       )}
@@ -146,7 +146,7 @@ export function BookingForm({
       <button
         type="submit"
         disabled={pending}
-        className="inline-flex h-13 w-full items-center justify-center gap-2 rounded-xl bg-brand-400 px-6 text-base font-bold text-ink-950 hover:bg-brand-300 disabled:opacity-70 sm:w-auto"
+        className="inline-flex h-13 w-full items-center justify-center gap-2 rounded-lg bg-brand-400 px-6 text-base font-bold text-ink-950 hover:bg-brand-300 disabled:opacity-70 sm:w-auto"
       >
         {pending ? <LoaderCircle className="h-5 w-5 animate-spin" aria-hidden /> : <Send className="h-5 w-5" aria-hidden />}
         {pending ? 'Mengirim...' : 'Kirim Booking'}

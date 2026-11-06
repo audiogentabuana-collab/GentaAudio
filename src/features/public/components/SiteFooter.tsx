@@ -23,7 +23,7 @@ export function SocialLinks({ s, className = '' }: { s: Settings; className?: st
             target="_blank"
             rel="noopener noreferrer"
             aria-label={label}
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-ink-700 text-ink-300 hover:border-brand-400 hover:text-brand-400"
+            className="flex h-10 w-10 items-center justify-center rounded-lg border border-ink-700 text-ink-300 hover:border-brand-400 hover:text-brand-400"
           >
             <Icon size={18} />
           </a>

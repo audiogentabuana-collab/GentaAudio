@@ -9,11 +9,9 @@ export function Logo({ name, logoId }: { name: string; logoId?: string }) {
           <DriveImage fileId={logoId} alt={`Logo ${name}`} sizes="36px" className="object-contain" />
         </span>
       ) : (
-        <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-400 text-ink-950">
-          <AudioLines className="h-5 w-5" aria-hidden />
-        </span>
+        <AudioLines className="h-8 w-8 text-brand-400" strokeWidth={2.5} aria-hidden />
       )}
-      <span className="text-lg font-extrabold tracking-tight text-ink-100">{name}</span>
+      <span className="text-xl font-medium tracking-tight text-ink-100">{name}</span>
     </span>
   );
 }

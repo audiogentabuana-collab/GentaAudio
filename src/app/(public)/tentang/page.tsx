@@ -34,13 +34,13 @@ export default async function TentangPage() {
           <aside className="space-y-4">
             <ul className="grid grid-cols-3 gap-3">
               {stats.map((st) => (
-                <li key={st.label} className="rounded-2xl border border-ink-800 bg-ink-900 p-4 text-center">
-                  <p className="text-2xl font-extrabold text-brand-400">{st.value}</p>
+                <li key={st.label} className="rounded-xl border border-ink-800 bg-ink-900 p-4 text-center">
+                  <p className="text-2xl font-semibold text-brand-400">{st.value}</p>
                   <p className="mt-1 text-xs text-ink-400">{st.label}</p>
                 </li>
               ))}
             </ul>
-            <div className="space-y-4 rounded-2xl border border-ink-800 bg-ink-900 p-5 text-sm">
+            <div className="space-y-4 rounded-xl border border-ink-800 bg-ink-900 p-5 text-sm">
               {s.service_area && (
                 <p className="flex gap-3 text-ink-300">
                   <MapPin className="h-5 w-5 shrink-0 text-brand-400" aria-hidden />

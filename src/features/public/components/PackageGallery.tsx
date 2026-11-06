@@ -11,7 +11,7 @@ export function PackageGallery({ images, name }: { images: string[]; name: strin
   const [zoom, setZoom] = useState(false);
   return (
     <div>
-      <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-ink-800 bg-ink-900">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-ink-800 bg-ink-900">
         <DriveImage fileId={images[current]} alt={`${name} foto ${current + 1}`} sizes="(min-width: 1024px) 50vw, 100vw" priority />
         {images.length > 0 && (
           <button type="button" onClick={() => setZoom(true)} aria-label="Perbesar foto" className="absolute bottom-3 right-3 flex h-10 w-10 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80">

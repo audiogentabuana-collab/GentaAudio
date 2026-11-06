@@ -1,35 +1,31 @@
 @import 'tailwindcss';
 
 @theme {
-  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 
-  /* Palet "panggung": charcoal + amber */
-  --color-ink-950: #090b10;
-  --color-ink-900: #0f1218;
-  --color-ink-850: #141821;
-  --color-ink-800: #1a1f2a;
-  --color-ink-700: #262c39;
-  --color-ink-600: #353c4b;
-  --color-ink-400: #8b93a3;
-  --color-ink-300: #b4bac6;
-  --color-ink-100: #eceae6;
+  /* Palet: hitam netral + oranye (referensi desain pemilik), aksen hijau lime */
+  --color-ink-950: #121212;
+  --color-ink-900: #181818;
+  --color-ink-850: #1d1d1d;
+  --color-ink-800: #232323;
+  --color-ink-700: #2f2f2f;
+  --color-ink-600: #444444;
+  --color-ink-400: #9b9b9b;
+  --color-ink-300: #c2c2c2;
+  --color-ink-100: #ededed;
 
-  --color-amber-glow: #ffc531;
-  --color-brand-50: #fff8e6;
-  --color-brand-100: #ffefc2;
-  --color-brand-300: #ffd666;
-  --color-brand-400: #ffc531;
-  --color-brand-500: #f5a800;
-  --color-brand-600: #d18a00;
-  --color-brand-700: #a56b00;
+  --color-brand-50: #fff4ed;
+  --color-brand-100: #ffe3d1;
+  --color-brand-300: #ffa06b;
+  --color-brand-400: #ff7f3e;
+  --color-brand-500: #f26a24;
+  --color-brand-600: #d9581a;
+  --color-brand-700: #a8420f;
 
-  --shadow-glow: 0 0 0 1px rgb(255 197 49 / 0.15), 0 20px 50px -20px rgb(255 197 49 / 0.35);
+  --color-lime-accent: #a8f08c;
 
-  --animate-eq: eq 1.2s ease-in-out infinite;
-  @keyframes eq {
-    0%, 100% { transform: scaleY(0.35); }
-    50% { transform: scaleY(1); }
-  }
+  --shadow-glow: 0 20px 50px -24px rgb(255 127 62 / 0.45);
+
 }
 
 @layer base {
@@ -70,16 +66,13 @@
 
 @utility bg-stage {
   background-color: var(--color-ink-950);
-  background-image:
-    radial-gradient(60rem 30rem at 85% -10%, rgb(255 197 49 / 0.16), transparent 60%),
-    radial-gradient(40rem 24rem at -10% 20%, rgb(255 140 0 / 0.08), transparent 60%);
 }
 
 @utility bg-grid {
   background-image:
-    linear-gradient(to right, rgb(255 255 255 / 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(255 255 255 / 0.04) 1px, transparent 1px);
-  background-size: 40px 40px;
+    linear-gradient(to right, rgb(255 255 255 / 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.06) 1px, transparent 1px);
+  background-size: 64px 64px;
 }
 
 /* Halaman dengan CTA lengket di bawah (detail paket, HP): sembunyikan tombol WA melayang

@@ -45,7 +45,7 @@ export function GalleryGrid({ items, showFilter = true, limit }: { items: Galler
               type="button"
               disabled={!item.image_ids.length}
               onClick={() => setOpen({ item, index: 0 })}
-              className="group relative block aspect-[4/5] w-full overflow-hidden rounded-2xl border border-ink-800 bg-ink-900 text-left disabled:cursor-default sm:aspect-[4/3]"
+              className="group relative block aspect-[4/5] w-full overflow-hidden rounded-xl border border-ink-800 bg-ink-900 text-left disabled:cursor-default sm:aspect-[4/3]"
               aria-label={item.image_ids.length ? `Lihat foto ${item.title}` : item.title}
             >
               <DriveImage fileId={item.image_ids[0]} alt={item.title} sizes="(min-width: 1024px) 33vw, 50vw" className="transition-transform duration-500 group-hover:scale-105" />

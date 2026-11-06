@@ -25,3 +25,9 @@ export function formatDateTimeId(iso: string) {
 export function cn(...classes: (string | false | null | undefined)[]) {
   return classes.filter(Boolean).join(' ');
 }
+
+export function omit<T extends Record<string, unknown>>(obj: T, key: string): T {
+  const copy = { ...obj };
+  delete copy[key];
+  return copy;
+}

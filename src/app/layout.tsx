@@ -1,12 +1,13 @@
 import type { Metadata, Viewport } from 'next';
-import { Plus_Jakarta_Sans } from 'next/font/google';
+import { Poppins } from 'next/font/google';
 import { siteUrl } from '@/shared/lib/site';
 import './globals.css';
 
-const jakarta = Plus_Jakarta_Sans({
+const poppins = Poppins({
   subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
   display: 'swap',
-  variable: '--font-jakarta',
+  variable: '--font-poppins',
 });
 
 export const metadata: Metadata = {
@@ -16,14 +17,14 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#090b10',
+  themeColor: '#121212',
   width: 'device-width',
   initialScale: 1,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="id" className={jakarta.variable}>
+    <html lang="id" className={poppins.variable}>
       <body className="min-h-dvh font-sans">{children}</body>
     </html>
   );

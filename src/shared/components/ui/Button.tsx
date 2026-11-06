@@ -6,12 +6,12 @@ type Variant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'whats
 type Size = 'sm' | 'md' | 'lg';
 
 const base =
-  'inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60 select-none';
+  'inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60 select-none';
 
 const variants: Record<Variant, string> = {
   primary: 'bg-brand-400 text-ink-950 hover:bg-brand-300 active:bg-brand-500',
   secondary: 'bg-ink-800 text-ink-100 hover:bg-ink-700 border border-ink-700',
-  outline: 'border border-current bg-transparent hover:bg-white/5',
+  outline: 'border border-ink-300/70 text-ink-100 bg-transparent hover:bg-white/5',
   ghost: 'bg-transparent hover:bg-black/5',
   danger: 'bg-red-600 text-white hover:bg-red-500',
   whatsapp: 'bg-[#25D366] text-[#062e16] hover:bg-[#3ee07a]',

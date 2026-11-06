@@ -17,7 +17,7 @@ export function PackageCard({
   priority?: boolean;
 }) {
   return (
-    <article className="group flex flex-col overflow-hidden rounded-2xl border border-ink-800 bg-ink-900 transition-colors hover:border-ink-600">
+    <article className="group flex flex-col overflow-hidden rounded-xl border border-ink-800 bg-ink-900 transition-colors hover:border-ink-600">
       <Link href={`/pricelist/${pkg.slug}`} className="relative block aspect-[4/3] overflow-hidden" tabIndex={-1} aria-hidden>
         <DriveImage
           fileId={pkg.image_ids[0]}
@@ -26,7 +26,7 @@ export function PackageCard({
           className="transition-transform duration-500 group-hover:scale-105"
         />
         {pkg.is_featured && (
-          <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-brand-400 px-2.5 py-1 text-xs font-bold text-ink-950">
+          <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-lime-accent px-2.5 py-1 text-xs font-semibold text-ink-950">
             <Star className="h-3.5 w-3.5" fill="currentColor" aria-hidden /> Terlaris
           </span>
         )}
@@ -54,14 +54,14 @@ export function PackageCard({
           </ul>
         )}
         <div className="mt-auto pt-5">
-          <p className="text-2xl font-extrabold text-brand-400">
+          <p className="text-2xl font-semibold text-brand-400">
             {formatRupiah(pkg.price)}
             <span className="ml-1 text-sm font-medium text-ink-400">/ {PRICE_UNIT_LABEL[pkg.price_unit]}</span>
           </p>
           <div className="mt-4 grid grid-cols-2 gap-2">
             <Link
               href={`/pricelist/${pkg.slug}`}
-              className="inline-flex h-11 items-center justify-center gap-1.5 rounded-xl border border-ink-700 text-sm font-semibold text-ink-100 hover:border-ink-400"
+              className="inline-flex h-11 items-center justify-center gap-1.5 rounded-lg border border-ink-700 text-sm font-semibold text-ink-100 hover:border-ink-400"
             >
               Detail <ArrowRight className="h-4 w-4" aria-hidden />
             </Link>
@@ -69,7 +69,7 @@ export function PackageCard({
               href={waHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex h-11 items-center justify-center gap-1.5 rounded-xl bg-[#25D366] text-sm font-bold text-[#062e16] hover:bg-[#3ee07a]"
+              className="inline-flex h-11 items-center justify-center gap-1.5 rounded-lg bg-[#25D366] text-sm font-bold text-[#062e16] hover:bg-[#3ee07a]"
               aria-label={`Pesan ${pkg.name} via WhatsApp`}
             >
               <WhatsAppIcon size={16} /> Pesan

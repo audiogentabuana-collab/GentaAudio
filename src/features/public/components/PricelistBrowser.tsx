@@ -66,7 +66,7 @@ export function PricelistBrowser({
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value as Sort)}
-            className="h-10 rounded-xl border border-ink-700 bg-ink-900 px-3 text-ink-100"
+            className="h-10 rounded-lg border border-ink-700 bg-ink-900 px-3 text-ink-100"
           >
             <option value="default">Rekomendasi</option>
             <option value="price-asc">Harga termurah</option>

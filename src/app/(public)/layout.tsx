@@ -10,7 +10,7 @@ import { driveImageUrl } from '@/shared/lib/drive-image';
 
 export async function generateMetadata(): Promise<Metadata> {
   const { settings: s } = await getPublicSnapshot();
-  const title = `${s.business_name} — ${s.tagline || 'Sewa Sound System'}`;
+  const title = `${s.business_name} — ${(s.tagline || 'Sewa Sound System').replace(/\s*\|\s*/g, ' ')}`;
   const description =
     s.description || `${s.business_name}: sewa sound system untuk hajatan, pernikahan, acara kampung, sekolah & kantor.`;
   return {

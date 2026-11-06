@@ -53,14 +53,35 @@ async function init(): Promise<MockHolder> {
     },
   });
   const holder: MockHolder = { runtime, loadedMtime: 0 };
-  const existing = mtime();
-  if (existing) {
+  fs.mkdirSync(STATE_DIR, { recursive: true });
+  if (!mtime()) {
+    // Beberapa proses (mis. worker `next build`) bisa init bersamaan:
+    // hanya satu yang boleh membuat data contoh, sisanya menunggu file state.
+    const lockDir = path.join(STATE_DIR, 'init.lock');
+    let owner = false;
+    try {
+      fs.mkdirSync(lockDir);
+      owner = true;
+    } catch {
+      owner = false;
+    }
+    if (owner) {
+      try {
+        if (!mtime()) {
+          runtime.run('setup');
+          persist(holder);
+          console.info(`[gas-mock] Data contoh dibuat. Login admin: ${username} / ${password}`);
+        }
+      } finally {
+        fs.rmSync(lockDir, { recursive: true, force: true });
+      }
+    } else {
+      for (let i = 0; i < 100 && !mtime(); i++) await new Promise((r) => setTimeout(r, 100));
+    }
+  }
+  if (!holder.loadedMtime) {
     runtime.importState(JSON.parse(fs.readFileSync(STATE_FILE, 'utf8')));
-    holder.loadedMtime = existing;
-  } else {
-    runtime.run('setup');
-    persist(holder);
-    console.info(`[gas-mock] Data contoh dibuat. Login admin: ${username} / ${password}`);
+    holder.loadedMtime = mtime();
   }
   return holder;
 }

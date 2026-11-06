@@ -1,0 +1,26 @@
+'use client';
+
+import { useTransition } from 'react';
+import { RefreshCw } from 'lucide-react';
+import { refreshSiteCache } from '../actions';
+import { useToast } from './Toast';
+
+export function RefreshCacheButton() {
+  const [pending, start] = useTransition();
+  const toast = useToast();
+  return (
+    <button
+      type="button"
+      disabled={pending}
+      onClick={() =>
+        start(async () => {
+          const res = await refreshSiteCache();
+          toast(res.ok ? 'success' : 'error', res.message ?? '');
+        })
+      }
+      className="inline-flex h-11 items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-800 hover:bg-slate-50 disabled:opacity-60"
+    >
+      <RefreshCw className={pending ? 'h-4 w-4 animate-spin' : 'h-4 w-4'} aria-hidden /> Muat ulang data website
+    </button>
+  );
+}

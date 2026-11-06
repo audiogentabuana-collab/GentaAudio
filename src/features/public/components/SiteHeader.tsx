@@ -62,15 +62,15 @@ export function SiteHeader({ name, logoId, waHref }: { name: string; logoId?: st
             href={waHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="ml-2 inline-flex h-10 items-center gap-2 rounded-xl bg-brand-400 px-4 text-sm font-semibold text-ink-950 hover:bg-brand-300"
+            className="ml-2 inline-flex h-10 items-center gap-2 rounded-lg bg-brand-400 px-4 text-sm font-semibold text-ink-950 hover:bg-brand-300"
           >
-            <WhatsAppIcon size={18} /> Chat WhatsApp
+            <WhatsAppIcon size={16} /> Chat WhatsApp
           </a>
         </nav>
 
         <button
           type="button"
-          className="inline-flex h-11 w-11 items-center justify-center rounded-xl text-ink-100 hover:bg-ink-800 md:hidden"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-lg text-ink-100 hover:bg-ink-800 md:hidden"
           aria-label={open ? 'Tutup menu' : 'Buka menu'}
           aria-expanded={open}
           aria-controls="mobile-nav"
@@ -90,7 +90,7 @@ export function SiteHeader({ name, logoId, waHref }: { name: string; logoId?: st
                   onClick={() => setOpen(false)}
                   aria-current={isActive(pathname, n.href) ? 'page' : undefined}
                   className={cn(
-                    'block rounded-xl px-4 py-3.5 text-lg font-semibold',
+                    'block rounded-lg px-4 py-3.5 text-lg font-semibold',
                     isActive(pathname, n.href) ? 'bg-ink-850 text-brand-400' : 'text-ink-100 active:bg-ink-850',
                   )}
                 >
@@ -103,7 +103,7 @@ export function SiteHeader({ name, logoId, waHref }: { name: string; logoId?: st
                 href={waHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-13 items-center justify-center gap-2 rounded-xl bg-[#25D366] text-base font-bold text-[#062e16]"
+                className="flex h-13 items-center justify-center gap-2 rounded-lg bg-[#25D366] text-base font-bold text-[#062e16]"
               >
                 <WhatsAppIcon size={20} /> Chat via WhatsApp
               </a>

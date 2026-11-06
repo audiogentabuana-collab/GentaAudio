@@ -70,8 +70,8 @@ export default async function PackageDetailPage({ params }: PageProps<'/pricelis
           <PackageGallery images={pkg.image_ids} name={pkg.name} />
           <div>
             {category && <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-400">{category.name}</p>}
-            <h1 className="mt-2 text-balance text-3xl font-extrabold tracking-tight text-ink-100 sm:text-4xl">{pkg.name}</h1>
-            <p className="mt-4 text-3xl font-extrabold text-brand-400">
+            <h1 className="mt-2 text-balance text-3xl font-semibold tracking-tight text-ink-100 sm:text-4xl">{pkg.name}</h1>
+            <p className="mt-4 text-3xl font-semibold text-brand-400">
               {formatRupiah(pkg.price)}
               <span className="ml-2 text-base font-medium text-ink-400">/ {PRICE_UNIT_LABEL[pkg.price_unit]}</span>
             </p>
@@ -94,7 +94,7 @@ export default async function PackageDetailPage({ params }: PageProps<'/pricelis
             {pkg.specs.length > 0 && (
               <div className="mt-8">
                 <h2 className="text-lg font-bold text-ink-100">Spesifikasi lengkap</h2>
-                <dl className="mt-3 divide-y divide-ink-800 overflow-hidden rounded-2xl border border-ink-800 bg-ink-900">
+                <dl className="mt-3 divide-y divide-ink-800 overflow-hidden rounded-xl border border-ink-800 bg-ink-900">
                   {pkg.specs.map((sp, i) => (
                     <div key={i} className="grid grid-cols-[minmax(6rem,35%)_1fr] gap-3 px-4 py-3 text-sm">
                       <dt className="flex items-start gap-2 font-semibold text-ink-300">
@@ -134,7 +134,7 @@ export default async function PackageDetailPage({ params }: PageProps<'/pricelis
         <div className="flex items-center justify-between gap-3">
           <div className="min-w-0">
             <p className="truncate text-xs text-ink-400">{pkg.name}</p>
-            <p className="font-extrabold text-brand-400">{formatRupiah(pkg.price)}</p>
+            <p className="font-semibold text-brand-400">{formatRupiah(pkg.price)}</p>
           </div>
           <ButtonLink href={wa} external variant="whatsapp" className="shrink-0">
             <WhatsAppIcon size={18} /> Pesan

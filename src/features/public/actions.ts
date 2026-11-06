@@ -25,14 +25,14 @@ export async function submitBooking(_prev: BookingState, formData: FormData): Pr
   if (String(formData.get('website') ?? '')) {
     return { status: 'success', summary: { name: values.name, event_date: values.event_date, location: values.location } };
   }
-  const startedAt = Number(formData.get('started_at'));
-  if (!Number.isFinite(startedAt) || Date.now() - startedAt < MIN_FILL_MS) {
-    return { status: 'error', message: 'Form terkirim terlalu cepat. Mohon periksa isian lalu kirim ulang.', values };
-  }
-
   const parsed = bookingSchema.safeParse(values);
   if (!parsed.success) {
     return { status: 'error', message: 'Periksa kembali isian yang ditandai.', errors: fieldErrors(parsed.error), values };
+  }
+
+  const startedAt = Number(formData.get('started_at'));
+  if (!Number.isFinite(startedAt) || Date.now() - startedAt < MIN_FILL_MS) {
+    return { status: 'error', message: 'Form terkirim terlalu cepat. Mohon periksa isian lalu kirim ulang.', values };
   }
 
   try {
