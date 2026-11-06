@@ -1,0 +1,91 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  /* Palet "panggung": charcoal + amber */
+  --color-ink-950: #090b10;
+  --color-ink-900: #0f1218;
+  --color-ink-850: #141821;
+  --color-ink-800: #1a1f2a;
+  --color-ink-700: #262c39;
+  --color-ink-600: #353c4b;
+  --color-ink-400: #8b93a3;
+  --color-ink-300: #b4bac6;
+  --color-ink-100: #eceae6;
+
+  --color-amber-glow: #ffc531;
+  --color-brand-50: #fff8e6;
+  --color-brand-100: #ffefc2;
+  --color-brand-300: #ffd666;
+  --color-brand-400: #ffc531;
+  --color-brand-500: #f5a800;
+  --color-brand-600: #d18a00;
+  --color-brand-700: #a56b00;
+
+  --shadow-glow: 0 0 0 1px rgb(255 197 49 / 0.15), 0 20px 50px -20px rgb(255 197 49 / 0.35);
+
+  --animate-eq: eq 1.2s ease-in-out infinite;
+  @keyframes eq {
+    0%, 100% { transform: scaleY(0.35); }
+    50% { transform: scaleY(1); }
+  }
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply antialiased;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-brand-400);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@utility container-page {
+  width: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+  padding-inline: 1rem;
+  @media (min-width: 640px) {
+    padding-inline: 1.5rem;
+  }
+}
+
+@utility text-balance {
+  text-wrap: balance;
+}
+
+@utility bg-stage {
+  background-color: var(--color-ink-950);
+  background-image:
+    radial-gradient(60rem 30rem at 85% -10%, rgb(255 197 49 / 0.16), transparent 60%),
+    radial-gradient(40rem 24rem at -10% 20%, rgb(255 140 0 / 0.08), transparent 60%);
+}
+
+@utility bg-grid {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Halaman dengan CTA lengket di bawah (detail paket, HP): sembunyikan tombol WA melayang
+   karena bar bawah sudah punya tombol WA sendiri. */
+@media (max-width: 767px) {
+  body:has([data-sticky-cta]) .floating-wa {
+    display: none;
+  }
+}
