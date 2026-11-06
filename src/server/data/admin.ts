@@ -2,8 +2,6 @@ import 'server-only';
 import { gas } from '../gas/client';
 import { assertAdmin } from '../auth/session';
 import type {
-  Booking,
-  BookingStatus,
   DashboardStats,
   ResourceName,
   ResourceRecordMap,
@@ -32,9 +30,4 @@ export async function adminSettings(): Promise<Settings> {
 export async function adminStats(): Promise<DashboardStats> {
   await assertAdmin();
   return gas<DashboardStats>('dashboard.stats');
-}
-
-export async function adminBookings(status?: BookingStatus): Promise<Booking[]> {
-  await assertAdmin();
-  return gas<Booking[]>('bookings.list', status ? { status } : {});
 }

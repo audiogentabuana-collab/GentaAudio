@@ -87,7 +87,7 @@ export default async function PackageDetailPage({ params }: PageProps<'/pricelis
                 <WhatsAppIcon size={20} /> Pesan via WhatsApp
               </ButtonLink>
               <ButtonLink href={`/kontak?paket=${encodeURIComponent(pkg.slug)}#booking`} variant="secondary" size="lg">
-                <CalendarCheck className="h-5 w-5" aria-hidden /> Isi Form Booking
+                <CalendarCheck className="h-5 w-5" aria-hidden /> Isi Detail Acara
               </ButtonLink>
             </div>
 

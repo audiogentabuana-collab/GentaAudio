@@ -5,8 +5,9 @@ import { signSession, verifySession } from '@/server/auth/token';
 import { gas, GasError, userMessage } from '@/server/gas/client';
 import { waLink, normalizePhone, displayPhone, packageWaMessage } from '@/shared/lib/whatsapp';
 import { formatRupiah } from '@/shared/lib/format';
+import { buildBookingMessage } from '@/features/public/components/WhatsAppComposer';
 import { driveImageUrl } from '@/shared/lib/drive-image';
-import { bookingSchema, packageSchema, settingsSchema, extractEmbedSrc, uploadSchema, fieldErrors } from '@/features/content/schemas';
+import { packageSchema, settingsSchema, extractEmbedSrc, uploadSchema } from '@/features/content/schemas';
 
 describe('password (scrypt)', () => {
   it('hash & verify', async () => {
@@ -136,13 +137,6 @@ describe('util', () => {
 });
 
 describe('schemas', () => {
-  it('booking: tanggal lampau & nomor salah ditolak', () => {
-    const r = bookingSchema.safeParse({ name: 'A', phone: 'abc', event_date: '2020-01-01', location: 'X' });
-    expect(r.success).toBe(false);
-    const errs = fieldErrors(r.error!);
-    expect(Object.keys(errs)).toEqual(expect.arrayContaining(['phone', 'event_date']));
-  });
-
   it('paket: harga dari string angka dikonversi', () => {
     const r = packageSchema.parse({ category_id: 'c', name: 'P', price: '1500000', price_unit: 'per_acara' });
     expect(r.price).toBe(1500000);
@@ -166,5 +160,31 @@ describe('schemas', () => {
     expect(uploadSchema.safeParse({ mimeType: 'application/pdf', base64: 'AAAA' }).success).toBe(false);
     expect(uploadSchema.safeParse({ mimeType: 'image/png', base64: 'A'.repeat(3_000_000) }).success).toBe(false);
     expect(uploadSchema.safeParse({ mimeType: 'image/png', base64: 'AAAA' }).success).toBe(true);
+  });
+});
+
+describe('pesan WhatsApp dari halaman kontak', () => {
+  const pkg = { id: 'p1', name: 'Paket Hajatan Standar', price: 1500000, price_unit: 'per_acara' } as never;
+
+  it('memuat semua isian yang diisi', () => {
+    const msg = buildBookingMessage(
+      'Genta Buana',
+      { name: 'Budi', event_date: '2026-12-20', location: 'Desa Sukamaju', event_type: 'Nikahan', package_id: 'p1', note: '300 tamu' },
+      pkg,
+    );
+    expect(msg).toContain('Halo Genta Buana');
+    expect(msg).toContain('Nama: Budi');
+    expect(msg).toContain('Tanggal acara: Minggu, 20 Desember 2026');
+    expect(msg).toContain('Lokasi: Desa Sukamaju');
+    expect(msg).toContain('Jenis acara: Nikahan');
+    expect(msg).toContain('Paket: Paket Hajatan Standar (Rp 1.500.000 per acara)');
+    expect(msg).toContain('Catatan: 300 tamu');
+  });
+
+  it('isian kosong dilewati tanpa baris kosong berlebih', () => {
+    const msg = buildBookingMessage('Genta Buana', { name: '', event_date: '', location: '', event_type: '', package_id: '', note: '' });
+    expect(msg).not.toMatch(/Nama:|Paket:/);
+    expect(msg).not.toMatch(/\n{3,}/);
+    expect(msg.endsWith('Terima kasih.')).toBe(true);
   });
 });

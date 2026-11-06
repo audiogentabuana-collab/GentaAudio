@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState, type ReactNode } from 'react';
-import { AudioLines, ExternalLink, Inbox, LayoutDashboard, LogOut, Menu, Settings, X, type LucideIcon } from 'lucide-react';
+import { AudioLines, ExternalLink, LayoutDashboard, LogOut, Menu, Settings, X, type LucideIcon } from 'lucide-react';
 import { RESOURCES } from '../resources';
 import { logout } from '../actions';
 import { ToastProvider } from './Toast';
@@ -11,7 +11,6 @@ import { cn } from '@/shared/lib/format';
 
 const NAV: { href: string; label: string; icon: LucideIcon }[] = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/admin/booking', label: 'Inbox Booking', icon: Inbox },
   ...RESOURCES.map((r) => ({ href: `/admin/${r.slug}`, label: r.label, icon: r.icon })),
   { href: '/admin/pengaturan', label: 'Pengaturan', icon: Settings },
 ];

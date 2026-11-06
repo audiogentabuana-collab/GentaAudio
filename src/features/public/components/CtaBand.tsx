@@ -14,7 +14,7 @@ export function CtaBand({ waHref }: { waHref: string }) {
                 <WhatsAppIcon size={20} /> Chat WhatsApp
               </ButtonLink>
               <ButtonLink href="/kontak" size="lg" variant="outline" className="border-ink-950 text-ink-950 hover:bg-ink-950/10">
-                Isi Form Booking
+                Isi Detail Acara
               </ButtonLink>
             </div>
           </div>

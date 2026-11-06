@@ -93,32 +93,32 @@ test.describe('halaman publik', () => {
   });
 });
 
-test.describe('booking', () => {
-  test('validasi form & kirim booking → masuk inbox admin → ubah status', async ({ page }) => {
+test.describe('pemesanan via WhatsApp', () => {
+  test('halaman kontak menyusun pesan WA dari isian (tanpa form booking)', async ({ page }) => {
     await page.goto('/kontak?paket=paket-pernikahan-premium', { waitUntil: 'networkidle' });
+    await expect(page.getByRole('button', { name: 'Kirim Booking' })).toHaveCount(0);
     await expect(page.getByLabel('Paket yang diminati')).toHaveValue(/.+/);
-    await page.getByRole('button', { name: 'Kirim Booking' }).click();
-    await expect(page.locator('#booking-message')).toBeVisible();
-    await expect(page.getByText('Nama wajib diisi')).toBeVisible();
 
-    await page.getByLabel('Nama lengkap').fill('Budi E2E');
-    await page.getByLabel('Nomor WhatsApp').fill('0812 3333 4444');
+    await page.getByLabel('Nama').fill('Budi E2E');
     await page.getByLabel('Tanggal acara').fill(futureDate());
     await page.getByLabel('Lokasi acara').fill('Balai Desa Sukamaju');
-    await page.getByLabel('Catatan').fill('Resepsi 300 tamu');
-    await page.waitForTimeout(2600); // anti-spam: waktu isi minimum
-    await page.getByRole('button', { name: 'Kirim Booking' }).click();
-    await expect(page.getByText('Booking terkirim, terima kasih!')).toBeVisible();
+    await page.getByLabel('Jenis acara').fill('Resepsi nikah');
+    await expect(page.getByTestId('wa-preview')).toContainText('Nama: Budi E2E');
+    await expect(page.getByTestId('wa-preview')).toContainText('Paket: Paket Pernikahan Premium');
 
+    const href = await page.getByRole('link', { name: 'Kirim via WhatsApp' }).getAttribute('href');
+    expect(href).toMatch(/^https:\/\/wa\.me\/62\d+\?text=/);
+    const text = decodeURIComponent(href!.split('?text=')[1]);
+    expect(text).toContain('Nama: Budi E2E');
+    expect(text).toContain('Lokasi: Balai Desa Sukamaju');
+    expect(text).toContain('Paket: Paket Pernikahan Premium');
+  });
+
+  test('menu admin tidak lagi berisi Inbox Booking', async ({ page }) => {
     await login(page);
-    await expect(page.getByText('Budi E2E')).toBeVisible();
-    await page.goto('/admin/booking');
-    const card = page.locator('div', { has: page.getByText('Budi E2E', { exact: true }) }).filter({ hasText: 'Chat pelanggan' }).last();
-    await expect(card.getByText('Paket Pernikahan Premium')).toBeVisible();
-    await card.getByRole('button', { name: 'Dihubungi' }).click();
-    await expect(page.getByText('Status: Dihubungi')).toBeVisible();
-    await page.goto('/admin/booking?status=dihubungi');
-    await expect(page.getByText('Budi E2E')).toBeVisible();
+    await expect(page.getByText('Pemesanan via WhatsApp')).toBeVisible();
+    await page.getByRole('button', { name: 'Buka menu' }).click();
+    await expect(page.getByRole('link', { name: 'Inbox Booking' })).toHaveCount(0);
   });
 });
 

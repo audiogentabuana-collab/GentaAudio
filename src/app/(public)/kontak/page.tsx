@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import { Clock, Mail, MapPin, Navigation, Phone } from 'lucide-react';
 import { getPublicSnapshot } from '@/server/data/public';
 import { PageHero } from '@/features/public/components/Section';
-import { BookingForm } from '@/features/public/components/BookingForm';
+import { WhatsAppComposer } from '@/features/public/components/WhatsAppComposer';
 import { SocialLinks } from '@/features/public/components/SiteFooter';
 import { ButtonLink } from '@/shared/components/ui/Button';
 import { WhatsAppIcon } from '@/shared/components/BrandIcons';
@@ -12,8 +12,8 @@ import { displayPhone, waLink } from '@/shared/lib/whatsapp';
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: 'Kontak & Booking',
-  description: 'Hubungi kami via WhatsApp atau isi form booking untuk mengecek ketersediaan tanggal sewa sound system.',
+  title: 'Kontak & Pemesanan',
+  description: 'Hubungi kami via WhatsApp untuk mengecek ketersediaan tanggal sewa sound system. Pesan bisa disusun otomatis dari halaman ini.',
   alternates: { canonical: '/kontak' },
 };
 
@@ -23,19 +23,19 @@ export default async function KontakPage() {
   const minDate = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jakarta' }).format(new Date());
   return (
     <>
-      <PageHero eyebrow="Kontak & booking" title="Cek ketersediaan tanggal" description="Isi form di bawah atau chat kami langsung. Kami biasanya membalas dalam hitungan menit pada jam operasional." />
+      <PageHero eyebrow="Kontak" title="Cek ketersediaan tanggal" description="Semua pemesanan dilakukan lewat WhatsApp. Isi detail acara di bawah supaya pesan tersusun otomatis, atau langsung chat kami." />
       <section className="py-10 sm:py-14">
         <div className="container-page grid gap-8 lg:grid-cols-[1.4fr_1fr]">
           <div id="booking" className="scroll-mt-20 rounded-xl border border-ink-800 bg-ink-900 p-5 sm:p-8">
-            <h2 className="mb-6 text-xl font-bold text-ink-100">Form booking</h2>
+            <h2 className="mb-2 text-xl font-bold text-ink-100">Pesan via WhatsApp</h2>
             <Suspense fallback={<div className="h-96 animate-pulse rounded-lg bg-ink-850" />}>
-              <BookingForm packages={snap.packages} whatsapp={s.whatsapp} businessName={s.business_name} minDate={minDate} />
+              <WhatsAppComposer packages={snap.packages} whatsapp={s.whatsapp} businessName={s.business_name} minDate={minDate} />
             </Suspense>
           </div>
           <aside className="space-y-5">
             <div className="rounded-xl border border-ink-800 bg-ink-900 p-5">
-              <h2 className="text-lg font-bold text-ink-100">Lebih cepat via WhatsApp</h2>
-              <p className="mt-1 text-sm text-ink-400">Kirim tanggal, lokasi, dan jenis acara Anda.</p>
+              <h2 className="text-lg font-bold text-ink-100">Langsung chat</h2>
+              <p className="mt-1 text-sm text-ink-400">Kami biasanya membalas dalam hitungan menit pada jam operasional.</p>
               <ButtonLink href={waLink(s.whatsapp, s.wa_default_message)} external variant="whatsapp" size="lg" className="mt-4 w-full">
                 <WhatsAppIcon size={20} /> {displayPhone(s.whatsapp) || 'Chat WhatsApp'}
               </ButtonLink>

@@ -4,7 +4,6 @@ import { redirect } from 'next/navigation';
 import { updateTag } from 'next/cache';
 import { z } from 'zod';
 import {
-  bookingStatusSchema,
   changePasswordSchema,
   extractEmbedSrc,
   fieldErrors,
@@ -112,30 +111,6 @@ export async function saveSettings(input: Record<string, string>): Promise<Actio
     await gas('settings.update', { values: parsed.data });
     publicChanged();
     return { ok: true, message: 'Pengaturan disimpan.' };
-  } catch (err) {
-    return failure(err);
-  }
-}
-
-/* -------------------------------- Booking -------------------------------- */
-
-export async function updateBooking(input: { id: string; status: string; admin_note?: string }): Promise<ActionResult> {
-  try {
-    await assertAdmin();
-    const parsed = bookingStatusSchema.safeParse(input);
-    if (!parsed.success) return { ok: false, message: 'Data tidak valid.', errors: fieldErrors(parsed.error) };
-    await gas('bookings.updateStatus', parsed.data);
-    return { ok: true, message: 'Booking diperbarui.' };
-  } catch (err) {
-    return failure(err);
-  }
-}
-
-export async function deleteBooking(id: string): Promise<ActionResult> {
-  try {
-    await assertAdmin();
-    await gas('bookings.delete', { id: idSchema.parse(id) });
-    return { ok: true, message: 'Booking dihapus.' };
   } catch (err) {
     return failure(err);
   }

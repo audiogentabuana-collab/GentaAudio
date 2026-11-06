@@ -38,7 +38,7 @@ const FEATURES = [
 
 const STEPS = [
   { Icon: ListChecks, title: 'Pilih paket', text: 'Bandingkan paket di halaman pricelist sesuai jenis acara dan jumlah tamu.' },
-  { Icon: MessageCircleMore, title: 'Chat / isi form', text: 'Kirim tanggal & lokasi lewat WhatsApp atau form booking. Kami cek ketersediaan.' },
+  { Icon: MessageCircleMore, title: 'Chat WhatsApp', text: 'Kirim tanggal & lokasi acara lewat WhatsApp. Kami cek ketersediaan dan beri penawaran.' },
   { Icon: BadgeCheck, title: 'Hari H beres', text: 'Setelah DP, tanggal terkunci. Tim kami datang, pasang, dan mengoperasikan sound.' },
 ];
 

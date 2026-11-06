@@ -4,7 +4,7 @@
 > Terakhir diupdate: 2026-11-06 — sesi: build awal fase 1–5 (Apps Script, API layer, publik, admin, SEO) + redesign tema hitam-oranye sesuai referensi pemilik.
 
 ## 1. Ringkasan Project
-- Website company profile + CMS untuk usaha sewa sound system "Genta Buana". Pengunjung: lihat pricelist/galeri lalu hubungi via WhatsApp atau form booking. Pemilik (non-teknis) mengelola konten di `/admin`.
+- Website company profile + CMS untuk usaha sewa sound system "Genta Buana". Pengunjung: lihat pricelist/galeri lalu pesan **langsung via WhatsApp** (form booking sudah dihapus atas permintaan pemilik). Pemilik (non-teknis) mengelola konten di `/admin`.
 - Stack: Next.js 16.4 (App Router, Turbopack) + React 19 + TypeScript + Tailwind CSS 4 + lucide-react v1; Zod 4; jose (JWT). Backend: Google Apps Script Web App (V8). DB: Google Sheets. File: Google Drive. Hosting: Vercel.
 - Repo tunggal: Next.js di root, kode Apps Script di `apps-script/src` (clasp, `rootDir: src`).
 
@@ -24,7 +24,7 @@
 ## 3. Konvensi yang harus diikuti
 - Error dari Apps Script → `GasError(code, message, details)`; tampilkan ke user via `userMessage(err)` (menyembunyikan detail CONFIG/UNAUTHORIZED).
 - Server action admin mengembalikan `ActionResult {ok, message?, errors?, data?}`; field error dari Zod via `fieldErrors()`.
-- **Jangan mengekspor konstanta/non-komponen dari file `'use client'` lalu memakainya di server component** (akan jadi client reference → `undefined`). Contoh yang sudah dipindah: `NAV` → `features/public/components/nav.ts`, `STATUS_META` → `features/admin/booking-status.ts`.
+- **Jangan mengekspor konstanta/non-komponen dari file `'use client'` lalu memakainya di server component** (akan jadi client reference → `undefined`). Contoh yang sudah dipindah: `NAV` → `features/public/components/nav.ts`.
 - Ikon: `lucide-react` (v1 tidak punya logo brand → `src/shared/components/BrandIcons.tsx`). Dilarang emoji di UI.
 - Tema publik: hitam netral `ink-*` + oranye `brand-400 #ff7f3e` + aksen `lime-accent`; font Poppins; tombol `rounded-md`. Admin: tema terang slate + aksen brand. Token di `src/app/globals.css` (`@theme`).
 - CRUD admin config-driven: tambah field → update `apps-script/src/Config.js` (TABLES), `src/features/content/types.ts`, `schemas.ts`, `src/features/admin/resources.ts`.
@@ -35,8 +35,9 @@
 |---|---|---|
 | Apps Script (router, CRUD generik, settings, booking, auth, upload Drive, setup+seed) | Done, tested | 32 test di `tests/unit/apps-script.test.ts` |
 | API layer Next (gas client, mock, cache, sesi, schema) | Done, tested | `tests/unit/lib.test.ts` |
-| Halaman publik (beranda, pricelist+filter, detail, galeri+lightbox, tentang, FAQ, kontak+booking, WA melayang) | Done, tested E2E | |
-| Admin (login+rate limit, dashboard, CRUD 6 resource, upload multi-gambar, reorder, toggle, inbox booking, pengaturan, ganti password) | Done, tested E2E | |
+| Halaman publik (beranda, pricelist+filter, detail, galeri+lightbox, tentang, FAQ, kontak + penyusun pesan WA, WA melayang) | Done, tested E2E | Kontak memakai `WhatsAppComposer` (tidak menyimpan data) |
+| Admin (login+rate limit, dashboard, CRUD 6 resource, upload multi-gambar, reorder, toggle, pengaturan, ganti password) | Done, tested E2E | Inbox booking dihapus |
+| Form booking + inbox | Dihapus | Keputusan pemilik: semua pemesanan via WhatsApp. Action `bookings.*` & sheet `bookings` di Apps Script dibiarkan (tidak dipakai) agar mudah diaktifkan lagi |
 | SEO (metadata, OG image dinamis, sitemap, robots, JSON-LD LocalBusiness/Service/FAQPage/Breadcrumb) | Done, tested E2E | OG image ada di `src/app/(public)/opengraph-image.tsx` (URL ber-hash karena route group) |
 | CI GitHub Actions | Dibuat | lint, typecheck, vitest, playwright (mode mock) |
 | Deploy nyata ke Google + Vercel | Belum | Butuh akun pemilik; ikuti README bagian 3–6 |
@@ -54,7 +55,7 @@
 
 ## 7. Catatan untuk agent berikutnya
 - Env Next: `GAS_WEB_APP_URL`, `GAS_API_KEY`, `SESSION_SECRET`, `NEXT_PUBLIC_SITE_URL`, `REVALIDATE_SECONDS`, `GAS_TIMEOUT_MS`, `NEXT_IMAGE_UNOPTIMIZED`, `GAS_MOCK`, `MOCK_ADMIN_USERNAME`, `MOCK_ADMIN_PASSWORD`.
-- Script Properties: `API_KEY`, `SPREADSHEET_ID`, `DRIVE_FOLDER_ID`, `ADMIN_INITIAL_USERNAME`, `ADMIN_INITIAL_PASSWORD_HASH`, `NOTIFY_EMAIL` (opsional), `CACHE_VER_*` (otomatis).
+- Script Properties: `API_KEY`, `SPREADSHEET_ID`, `DRIVE_FOLDER_ID`, `ADMIN_INITIAL_USERNAME`, `ADMIN_INITIAL_PASSWORD_HASH`, `NOTIFY_EMAIL` (opsional, tidak dipakai lagi), `CACHE_VER_*` (otomatis).
 - Perintah: `npm run dev` (pakai `.env.local` dengan `GAS_MOCK=true` untuk lokal), `npm test`, `npm run test:e2e`, `npm run typecheck` (menjalankan `next typegen` dulu untuk `PageProps`/`RouteContext`).
 - Playwright memakai browser pra-terpasang versi 1.63 (`@playwright/test` dipin 1.63.0).
 - Ubah kode Apps Script → `npm run gas:bundle` (perbarui `apps-script/dist/Code.gs` untuk jalur copy-paste; ada test sinkronisasi) → jalankan unit test (harness memuat file asli) → `npm run gas:push` → update deployment (README 4.2), jangan buat deployment baru (URL berubah).

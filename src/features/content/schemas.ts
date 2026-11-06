@@ -3,7 +3,7 @@
  * Dipakai di client (pesan error form) dan WAJIB dipanggil lagi di server action.
  */
 import { z } from 'zod';
-import { BOOKING_STATUSES, SETTING_KEYS, type ResourceName } from './types';
+import { SETTING_KEYS, type ResourceName } from './types';
 
 export const FILE_ID_RE = /^[A-Za-z0-9_-]{10,128}$/;
 const fileId = z.string().regex(FILE_ID_RE, 'ID gambar tidak valid');
@@ -145,29 +145,6 @@ export function extractEmbedSrc(input: string): string {
 }
 
 export const settingKeysSchema = z.enum(SETTING_KEYS);
-
-/* ---------------- Booking (publik) ---------------- */
-
-export const bookingSchema = z.object({
-  name: req('Nama', 100),
-  phone: z
-    .string({ error: 'Nomor WhatsApp wajib diisi' })
-    .trim()
-    .regex(phoneRe, 'Nomor WhatsApp tidak valid (contoh: 0812xxxxxxx)'),
-  event_date: dateStr.refine((s) => {
-    const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jakarta' }).format(new Date());
-    return s >= today;
-  }, 'Tanggal acara tidak boleh di masa lalu'),
-  location: req('Lokasi acara', 250),
-  package_id: z.string().max(64).optional().default(''),
-  message: opt('Pesan', 2000),
-});
-
-export const bookingStatusSchema = z.object({
-  id: z.string().min(1),
-  status: z.enum(BOOKING_STATUSES),
-  admin_note: z.string().trim().max(2000).optional(),
-});
 
 /* ---------------- Auth ---------------- */
 

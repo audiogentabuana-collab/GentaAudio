@@ -54,7 +54,7 @@ gentabuana/
 │       ├── Lock.js              # LockService untuk semua operasi tulis
 │       ├── Validate.js          # validasi dasar sisi Apps Script
 │       ├── DriveStore.js        # simpan/hapus gambar di Drive
-│       ├── RateLimit.js         # pembatas percobaan login & booking
+│       ├── RateLimit.js         # pembatas percobaan login
 │       ├── Setup.js             # setup(), initApiKey(), checkConfig(), clearCache()
 │       └── handlers/            # Crud, Settings, Bookings, Auth, Public
 ├── src/
@@ -177,7 +177,6 @@ Buka **Project Settings → Script Properties → Add script property**:
 | `API_KEY` | String acak minimal 32 karakter. Paling mudah: jalankan fungsi `initApiKey` dari editor (lihat 3.5), atau isi dengan hasil `npm run gen-secret` | Ya |
 | `ADMIN_INITIAL_USERNAME` | Username admin pertama, mis. `owner` | Ya (untuk admin pertama) |
 | `ADMIN_INITIAL_PASSWORD_HASH` | Hasil `npm run hash-password` (seluruh baris `scrypt$...`) | Ya (untuk admin pertama) |
-| `NOTIFY_EMAIL` | Email yang menerima notifikasi booking baru | Opsional |
 
 > Password admin **tidak pernah** disimpan dalam bentuk teks biasa. Yang disimpan hanya hash scrypt-nya. Setelah login pertama, password bisa diganti dari menu **Pengaturan** di admin. Property `ADMIN_INITIAL_PASSWORD_HASH` boleh dihapus setelah `setup()` berhasil.
 
@@ -293,14 +292,15 @@ Buka `https://domain-anda/admin` lalu login.
 
 | Menu | Kegunaan |
 |---|---|
-| **Dashboard** | Ringkasan: booking baru, jumlah paket, dan aksi cepat. Tombol **Muat ulang data website** dipakai setelah Anda mengedit Google Sheet secara langsung. |
-| **Inbox Booking** | Daftar permintaan dari form booking. Tekan **Chat pelanggan** untuk membuka WhatsApp dengan pesan siap kirim, lalu ubah status menjadi *Dihubungi / Deal / Batal*. |
+| **Dashboard** | Ringkasan isi website, nomor WhatsApp aktif, dan aksi cepat. Tombol **Muat ulang data website** dipakai setelah Anda mengedit Google Sheet secara langsung. |
 | **Paket & Pricelist** | Tambah atau ubah paket, harga, spesifikasi, dan foto. Centang **Unggulan** agar paket tampil di beranda. |
 | **Kategori Paket** | Kelompok paket untuk filter di Pricelist. |
 | **Peralatan** | Alat yang disewakan satuan. |
 | **Galeri / Portofolio** | Album foto acara (beberapa foto per album). |
 | **Testimoni / FAQ** | Ulasan pelanggan & tanya-jawab. |
 | **Pengaturan** | Nama usaha, tagline, nomor WhatsApp, alamat, peta, media sosial, logo, foto utama, dan ganti password. |
+
+Alur pemesanan: semua tombol "Pesan" dan halaman **Kontak** langsung membuka WhatsApp ke nomor di **Pengaturan → Nomor WhatsApp**, dengan pesan otomatis berisi nama paket. Di halaman Kontak, pengunjung bisa mengisi nama, tanggal, lokasi, dan paket, lalu pesannya tersusun sendiri. Data ini **tidak disimpan** di website.
 
 Tips:
 
@@ -331,10 +331,7 @@ Format request: `POST { apiKey, action, payload }`. Format response: `{ success,
 | `<tabel>.delete` | `{ id }` | Foto terkait dipindah ke Trash |
 | `<tabel>.reorder` | `{ ids: [...] }` | Urutan baru |
 | `<tabel>.toggle` | `{ id, is_active }` | Tampil/sembunyi |
-| `bookings.create` | `{ name, phone, event_date, location, package_id?, message?, ip }` | Dari form publik, dengan rate limit 5/jam/IP |
-| `bookings.list` | `{ status? }` | Terbaru dulu, termasuk `package_name` |
-| `bookings.updateStatus` | `{ id, status, admin_note? }` | `baru` / `dihubungi` / `deal` / `batal` |
-| `bookings.delete` | `{ id }` | |
+| `bookings.*` | – | **Tidak dipakai website saat ini** (pemesanan langsung lewat WhatsApp). Tetap ada di Apps Script bila suatu saat form booking diaktifkan lagi. |
 | `upload.image` | `{ fileName, mimeType, base64 }` | JPG/PNG/WEBP ≤ 2MB, menghasilkan `{ fileId, url }` |
 | `upload.delete` | `{ fileId }` | Hanya file di folder upload |
 | `auth.getCredential` | `{ username, ip }` | Mengambil hash untuk diverifikasi di Next.js (dengan rate limit) |
@@ -358,7 +355,7 @@ Semua tabel memakai kolom standar **`id` (UUID), `sort_order`, `is_active`, `cre
 | `gallery` | `title`, `event_type`, `event_date` (YYYY-MM-DD), `location`, `description`, `image_ids` |
 | `testimonials` | `name`, `event`, `message`, `rating` (1–5) |
 | `faqs` | `question`, `answer` |
-| `bookings` | `name`, `phone` (format 62…), `event_date`, `location`, `package_id`, `message`, `status`, `admin_note` |
+| `bookings` | Tidak dipakai saat ini (sheet tetap dibuat oleh `setup()`, boleh diabaikan) |
 | `admins` | `username`, `password_hash`, `role`, `last_login_at` |
 
 Kalau mengedit manual: isi boolean dengan `TRUE`/`FALSE`, dan isi `image_ids`/`specs` dengan JSON yang valid.
@@ -377,7 +374,6 @@ Kalau mengedit manual: isi boolean dengan `TRUE`/`FALSE`, dan isi `image_ids`/`s
 | Ukuran body: Vercel Functions ±4,5MB, Server Action default 1MB | Upload foto besar gagal | Foto dikompres di browser (≤1MB, lebar ≤1600px), dikirim **satu foto per request** lewat Route Handler. |
 | CacheService: maks 100KB per value, TTL maks 6 jam | Data besar tidak bisa dicache utuh | Data dipecah (chunking) + versioning per tabel. |
 | Kontensi LockService | Dua penyimpanan bersamaan bisa bentrok | Semua tulis di dalam `LockService`. Bila antrian penuh muncul pesan "Server sibuk, coba lagi" (kode `BUSY`), dan bacaan di-retry 1×. |
-| Kuota MailApp (±100 email/hari untuk akun gratis) | Notifikasi email bisa berhenti | Email bersifat opsional. Booking tetap tersimpan walau email gagal. |
 | Endpoint `drive.google.com/thumbnail` tidak resmi dan bisa di-throttle | Gambar sesekali gagal dimuat | Gambar dicache oleh Next Image (31 hari). Bisa juga dinonaktifkan via `NEXT_IMAGE_UNOPTIMIZED`. |
 | Akun Google Workspace bisa melarang sharing publik | Gambar tidak tampil | Upload gagal dengan pesan jelas. Gunakan akun Gmail biasa atau minta admin Workspace mengizinkan sharing. |
 | Data cache Next.js tetap bertahan antar deploy | Setelah mengganti Spreadsheet, data lama bisa tampil s/d 1 jam | Klik **Muat ulang data website** di Dashboard. |
@@ -391,7 +387,8 @@ Kalau mengedit manual: isi boolean dengan `TRUE`/`FALSE`, dan isi `image_ids`/`s
 - Perbandingan API key di Apps Script dilakukan dengan waktu konstan.
 - Password admin di-hash dengan **scrypt** (N=16384) di Next.js. Verifikasi tetap dilakukan walau username tidak ada (hash dummy), sehingga username tidak bisa ditebak dari waktu respon.
 - Sesi berupa JWT HS256 di cookie **httpOnly, Secure, SameSite=Lax**, berlaku 7 hari.
-- Rate limit: login 5×/15 menit per username dan 20× per IP; booking 5×/jam per IP. Form booking juga dilindungi honeypot dan waktu isi minimum.
+- Rate limit login: 5×/15 menit per username dan 20× per IP.
+- Halaman publik tidak menyimpan data pengunjung apa pun: pemesanan langsung lewat WhatsApp.
 - Proteksi berlapis: `proxy.ts` untuk `/admin` ditambah pengecekan sesi di setiap halaman, server action, dan route upload. Route upload juga memeriksa Origin.
 - Validasi dua sisi: Zod di Next.js dan validasi dasar di Apps Script (whitelist field, panjang, tipe). Teks yang diawali `= + - @` disimpan sebagai teks, bukan formula.
 - `upload.delete` hanya bisa menghapus file di folder upload.
