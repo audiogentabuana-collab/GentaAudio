@@ -1,0 +1,5 @@
+apps-script
+tests
+playwright-report
+test-results
+.mock-gas

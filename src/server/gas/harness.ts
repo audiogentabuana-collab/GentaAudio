@@ -157,6 +157,14 @@ export interface GasRuntime {
   spreadsheet: FakeSpreadsheet;
   setLockBusy(busy: boolean): void;
   apiKey: string;
+  exportState(): SerializedState;
+  importState(state: SerializedState): void;
+}
+
+export interface SerializedState {
+  sheets: Record<string, string[][]>;
+  properties: Record<string, string>;
+  files: (Omit<FakeFile, 'bytes'> & { bytes: string })[];
 }
 
 function loadSources(dir: string): string {
@@ -347,6 +355,22 @@ export function createGasRuntime(
     spreadsheet,
     setLockBusy: (b) => {
       lockBusy = b;
+    },
+    exportState: () => ({
+      sheets: Object.fromEntries([...spreadsheet.sheets].map(([k, v]) => [k, v.data])),
+      properties: Object.fromEntries(properties),
+      files: [...files.values()].map((f) => ({ ...f, bytes: f.bytes.toString('base64') })),
+    }),
+    importState: (state) => {
+      spreadsheet.sheets.clear();
+      Object.entries(state.sheets).forEach(([name, data]) => {
+        const sh = spreadsheet.insertSheet(name);
+        sh.data = data;
+      });
+      properties.clear();
+      Object.entries(state.properties).forEach(([k, v]) => properties.set(k, v));
+      files.clear();
+      state.files.forEach((f) => files.set(f.id, { ...f, bytes: Buffer.from(f.bytes, 'base64') }));
     },
     handleRaw: (raw) => JSON.parse(JSON.stringify(fn('handleRequest')(raw))),
     call(action, payload = {}, key = apiKey) {
