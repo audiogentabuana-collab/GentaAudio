@@ -2,14 +2,13 @@
 
 import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { MessageSquareText } from 'lucide-react';
 import type { Package } from '@/features/content/types';
 import { WhatsAppIcon } from '@/shared/components/BrandIcons';
 import { formatDateId, formatRupiah, PRICE_UNIT_LABEL } from '@/shared/lib/format';
 import { waLink } from '@/shared/lib/whatsapp';
 
 const inputCls =
-  'block w-full rounded-lg border border-ink-700 bg-ink-950 px-4 py-3 text-base text-ink-100 placeholder:text-ink-600 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-400/30';
+  'block w-full rounded-[3px] border border-ink-700 bg-ink-900 px-3.5 py-3 text-base text-ink-100 placeholder:text-ink-600 focus:border-brand-400 focus:outline-none';
 
 interface Draft {
   name: string;
@@ -64,29 +63,27 @@ export function WhatsAppComposer({
   const href = waLink(whatsapp, message);
 
   return (
-    <div className="space-y-5">
-      <p className="text-sm text-ink-400">
-        Isi yang Anda tahu saja (semua opsional). Pesan WhatsApp akan tersusun otomatis, tinggal kirim.
-      </p>
+    <div className="space-y-6">
+      <p className="mt-2 text-ink-400">Semua isian opsional. Tidak ada data yang disimpan di website.</p>
       <div className="grid gap-5 sm:grid-cols-2">
         <label className="block">
-          <span className="mb-1.5 block text-sm font-semibold text-ink-100">Nama</span>
+          <span className="label-mono mb-2 block text-ink-400">Nama</span>
           <input value={draft.name} onChange={set('name')} autoComplete="name" maxLength={100} placeholder="Nama Anda" className={inputCls} />
         </label>
         <label className="block">
-          <span className="mb-1.5 block text-sm font-semibold text-ink-100">Tanggal acara</span>
+          <span className="label-mono mb-2 block text-ink-400">Tanggal acara</span>
           <input type="date" min={minDate} value={draft.event_date} onChange={set('event_date')} className={`${inputCls} [color-scheme:dark]`} />
         </label>
         <label className="block">
-          <span className="mb-1.5 block text-sm font-semibold text-ink-100">Lokasi acara</span>
+          <span className="label-mono mb-2 block text-ink-400">Lokasi acara</span>
           <input value={draft.location} onChange={set('location')} maxLength={200} placeholder="Desa / kecamatan / kota" className={inputCls} />
         </label>
         <label className="block">
-          <span className="mb-1.5 block text-sm font-semibold text-ink-100">Jenis acara</span>
+          <span className="label-mono mb-2 block text-ink-400">Jenis acara</span>
           <input value={draft.event_type} onChange={set('event_type')} maxLength={100} placeholder="Nikahan, hajatan, 17-an, sekolah..." className={inputCls} />
         </label>
         <label className="block sm:col-span-2">
-          <span className="mb-1.5 block text-sm font-semibold text-ink-100">Paket yang diminati</span>
+          <span className="label-mono mb-2 block text-ink-400">Paket yang diminati</span>
           <select value={draft.package_id} onChange={set('package_id')} className={inputCls}>
             <option value="">Belum tahu / minta rekomendasi</option>
             {packages.map((p) => (
@@ -97,16 +94,14 @@ export function WhatsAppComposer({
           </select>
         </label>
         <label className="block sm:col-span-2">
-          <span className="mb-1.5 block text-sm font-semibold text-ink-100">Catatan</span>
+          <span className="label-mono mb-2 block text-ink-400">Catatan</span>
           <textarea value={draft.note} onChange={set('note')} rows={3} maxLength={1000} placeholder="Perkiraan jumlah tamu, kebutuhan khusus, dll." className={inputCls} />
         </label>
       </div>
 
-      <div className="rounded-lg border border-ink-800 bg-ink-950 p-4">
-        <p className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-ink-400">
-          <MessageSquareText className="h-4 w-4" aria-hidden /> Pratinjau pesan
-        </p>
-        <p className="whitespace-pre-line text-sm leading-relaxed text-ink-300" data-testid="wa-preview">
+      <div className="border-l-2 border-brand-400 bg-ink-900 px-4 py-3">
+        <p className="label-mono mb-2 text-ink-600">Pratinjau pesan</p>
+        <p className="whitespace-pre-line font-mono text-[13px] leading-relaxed text-ink-300" data-testid="wa-preview">
           {message}
         </p>
       </div>
@@ -115,9 +110,9 @@ export function WhatsAppComposer({
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex h-13 w-full items-center justify-center gap-2 rounded-md bg-[#25D366] px-6 text-base font-semibold text-[#062e16] hover:bg-[#3ee07a] sm:w-auto"
+        className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-[3px] bg-brand-400 px-5 text-base font-medium text-ink-950 hover:bg-brand-300 sm:w-auto"
       >
-        <WhatsAppIcon size={20} /> Kirim via WhatsApp
+        <WhatsAppIcon size={18} /> Kirim via WhatsApp
       </a>
     </div>
   );

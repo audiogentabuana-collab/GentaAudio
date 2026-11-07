@@ -1,11 +1,10 @@
 import Image from 'next/image';
-import { Speaker } from 'lucide-react';
 import { driveImageUrl, isMockImage } from '@/shared/lib/drive-image';
 import { cn } from '@/shared/lib/format';
 
 /**
  * Gambar dari Google Drive (via next/image). Bila belum ada foto, tampilkan
- * placeholder bertema panggung agar layout tetap rapi.
+ * bidang polos dengan keterangan jujur — bukan ilustrasi palsu.
  */
 export function DriveImage({
   fileId,
@@ -28,16 +27,8 @@ export function DriveImage({
 }) {
   if (!fileId) {
     return (
-      <div
-        role="img"
-        aria-label={alt}
-        className={cn(
-          'flex items-center justify-center bg-gradient-to-br from-ink-800 via-ink-850 to-ink-900 text-ink-600',
-          fill && 'absolute inset-0',
-          className,
-        )}
-      >
-        <Speaker className="h-1/3 max-h-16 w-1/3 max-w-16" strokeWidth={1.25} aria-hidden />
+      <div role="img" aria-label={alt} className={cn('flex items-end bg-ink-850 p-3', fill && 'absolute inset-0', className)}>
+        <span className="label-mono text-ink-600">Foto belum tersedia</span>
       </div>
     );
   }

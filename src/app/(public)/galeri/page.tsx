@@ -9,7 +9,7 @@ export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: 'Galeri & Portofolio Acara',
-  description: 'Dokumentasi acara yang menggunakan sound system kami: pernikahan, hajatan, panggung hiburan, acara sekolah dan kantor.',
+  description: 'Dokumentasi acara yang memakai sound system kami: pernikahan, hajatan, panggung hiburan, acara sekolah dan kantor.',
   alternates: { canonical: '/galeri' },
 };
 
@@ -23,7 +23,7 @@ export default async function GaleriPage() {
           <GalleryGrid items={snap.gallery} />
         </div>
       </section>
-      <CtaBand waHref={waLink(snap.settings.whatsapp, snap.settings.wa_default_message)} />
+      <CtaBand waHref={waLink(snap.settings.whatsapp, snap.settings.wa_default_message)} phone={snap.settings.whatsapp} />
     </>
   );
 }

@@ -2,7 +2,6 @@
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { Save } from 'lucide-react';
 import type { SettingKey, Settings } from '@/features/content/types';
 import { extractEmbedSrc, fieldErrors, settingsSchema } from '@/features/content/schemas';
 import { saveSettings } from '../actions';
@@ -18,7 +17,7 @@ const GROUPS: { title: string; description?: string; fields: F[] }[] = [
     title: 'Profil usaha',
     fields: [
       { key: 'business_name', label: 'Nama usaha', required: true },
-      { key: 'tagline', label: 'Tagline / judul utama', help: 'Tampil besar di beranda. Separuh awal berwarna oranye; atur sendiri dengan tanda |, mis. "Sewa Sound System | untuk Setiap Acara".' },
+      { key: 'tagline', label: 'Tagline / judul utama', help: 'Judul besar di beranda. Bagian sebelum tanda | tampil terang, sisanya abu-abu. Contoh: "Sewa Sound System | untuk Setiap Acara".' },
       { key: 'description', label: 'Deskripsi singkat', type: 'textarea', full: true, help: 'Tampil di beranda dan hasil pencarian Google (±150 karakter ideal).' },
       { key: 'about', label: 'Tentang kami', type: 'textarea', full: true, help: 'Isi halaman Tentang. Tekan Enter dua kali untuk paragraf baru.' },
     ],
@@ -99,15 +98,15 @@ export function SettingsForm({ initial }: { initial: Settings }) {
     <form onSubmit={submit} noValidate className="space-y-4 pb-24">
       {GROUPS.map((g) => (
         <Card key={g.title} className="p-5 sm:p-6">
-          <h2 className="mb-4 text-base font-bold text-slate-900">{g.title}</h2>
+          <h2 className="mb-5 text-lg font-semibold text-stone-900">{g.title}</h2>
           <div className="grid gap-5 sm:grid-cols-2">
             {g.fields.map((f) => {
               const id = `s-${f.key}`;
               if (f.type === 'image') {
                 return (
                   <fieldset key={f.key}>
-                    <legend className="mb-1.5 text-sm font-semibold text-slate-800">{f.label}</legend>
-                    {f.help && <p className="mb-2 text-xs text-slate-500">{f.help}</p>}
+                    <legend className="mb-1.5 text-sm font-medium text-stone-900">{f.label}</legend>
+                    {f.help && <p className="mb-2 text-xs text-stone-500">{f.help}</p>}
                     <ImagesField id={id} single keepPng={f.key === 'logo_id'} value={values[f.key] ? [values[f.key]] : []} onChange={(ids) => set(f.key, ids[0] ?? '')} error={errors[f.key]} />
                   </fieldset>
                 );
@@ -129,10 +128,10 @@ export function SettingsForm({ initial }: { initial: Settings }) {
           </div>
         </Card>
       ))}
-      <div className="fixed inset-x-0 bottom-0 z-20 border-t border-slate-200 bg-white/95 p-3 backdrop-blur lg:left-64">
-        <div className="mx-auto flex max-w-5xl justify-end">
+      <div className="fixed inset-x-0 bottom-0 z-20 border-t border-stone-300 bg-paper/95 p-3 backdrop-blur-sm">
+        <div className="mx-auto flex max-w-6xl px-1 sm:px-5 justify-end">
           <AdminButton type="submit" loading={saving} className="min-w-40">
-            {!saving && <Save className="h-4 w-4" aria-hidden />} {saving ? 'Menyimpan...' : 'Simpan pengaturan'}
+            {saving ? 'Menyimpan...' : 'Simpan pengaturan'}
           </AdminButton>
         </div>
       </div>

@@ -1,83 +1,123 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowRight, CircleHelp, Images, MessageSquareQuote, Package, Plus, Settings, Tags } from 'lucide-react';
-import { adminSettings, adminStats } from '@/server/data/admin';
-import { getSession } from '@/server/auth/session';
-import { Card, PageHeader } from '@/features/admin/components/ui';
+import { adminList, adminSettings, adminStats } from '@/server/data/admin';
+import { PageHeader } from '@/features/admin/components/ui';
 import { RefreshCacheButton } from '@/features/admin/components/RefreshCacheButton';
-import { WhatsAppIcon } from '@/shared/components/BrandIcons';
 import { displayPhone } from '@/shared/lib/whatsapp';
+import { cn } from '@/shared/lib/format';
 
-export const metadata: Metadata = { title: 'Dashboard' };
+export const metadata: Metadata = { title: 'Ringkasan' };
+
+const SEED_WA = '6281234567890';
+const filled = (v: string) => Boolean(v) && !v.startsWith('[ISI');
 
 export default async function DashboardPage() {
-  const [stats, settings, session] = await Promise.all([adminStats(), adminSettings(), getSession()]);
-  const cards = [
-    { label: 'Paket aktif', value: stats.packages.active, sub: `${stats.packages.total} total`, href: '/admin/paket', icon: Package },
-    { label: 'Kategori', value: stats.categories.active, sub: `${stats.categories.total} total`, href: '/admin/kategori', icon: Tags },
-    { label: 'Album galeri', value: stats.gallery.active, sub: `${stats.gallery.total} total`, href: '/admin/galeri', icon: Images },
-    { label: 'Testimoni', value: stats.testimonials.active, sub: `${stats.testimonials.total} total`, href: '/admin/testimoni', icon: MessageSquareQuote },
+  const [stats, s, packages, gallery] = await Promise.all([adminStats(), adminSettings(), adminList('packages'), adminList('gallery')]);
+
+  const pkgNoPhoto = packages.filter((p) => p.image_ids.length === 0).length;
+  const galNoPhoto = gallery.filter((g) => g.image_ids.length === 0).length;
+
+  const checklist: { done: boolean; label: string; note?: string; href: string }[] = [
+    {
+      done: Boolean(s.whatsapp) && s.whatsapp !== SEED_WA,
+      label: 'Nomor WhatsApp asli',
+      note: s.whatsapp === SEED_WA ? 'Masih nomor contoh' : displayPhone(s.whatsapp),
+      href: '/admin/pengaturan',
+    },
+    { done: filled(s.address), label: 'Alamat usaha', href: '/admin/pengaturan' },
+    { done: filled(s.service_area), label: 'Area layanan', href: '/admin/pengaturan' },
+    { done: Boolean(s.maps_url || s.maps_embed_url), label: 'Lokasi Google Maps', href: '/admin/pengaturan' },
+    { done: Boolean(s.email) && !s.email.endsWith('.example'), label: 'Email usaha', note: s.email.endsWith('.example') ? 'Masih email contoh' : undefined, href: '/admin/pengaturan' },
+    { done: Boolean(s.logo_id), label: 'Logo', href: '/admin/pengaturan' },
+    { done: Boolean(s.hero_image_id), label: 'Foto utama beranda', href: '/admin/pengaturan' },
+    {
+      done: packages.length > 0 && pkgNoPhoto === 0,
+      label: 'Foto untuk setiap paket',
+      note: pkgNoPhoto ? `${pkgNoPhoto} dari ${packages.length} paket belum ada foto` : undefined,
+      href: '/admin/paket',
+    },
+    {
+      done: gallery.length > 0 && galNoPhoto === 0,
+      label: 'Foto di galeri',
+      note: galNoPhoto ? `${galNoPhoto} dari ${gallery.length} album belum ada foto` : undefined,
+      href: '/admin/galeri',
+    },
   ];
+  const doneCount = checklist.filter((c) => c.done).length;
+
+  const contents: [string, string, string][] = [
+    ['Paket', `${stats.packages.active} tampil / ${stats.packages.total}`, '/admin/paket'],
+    ['Kategori', `${stats.categories.active} / ${stats.categories.total}`, '/admin/kategori'],
+    ['Peralatan', `${stats.equipment.active} / ${stats.equipment.total}`, '/admin/peralatan'],
+    ['Galeri', `${stats.gallery.active} / ${stats.gallery.total}`, '/admin/galeri'],
+    ['Testimoni', `${stats.testimonials.active} / ${stats.testimonials.total}`, '/admin/testimoni'],
+    ['FAQ', `${stats.faqs.active} / ${stats.faqs.total}`, '/admin/faq'],
+  ];
+
   return (
     <div>
-      <PageHeader title={`Halo, ${session?.username ?? 'Admin'}`} description="Ringkasan isi website Anda." action={<RefreshCacheButton />} />
+      <PageHeader title="Ringkasan" description="Kondisi isi website saat ini dan hal yang masih perlu dilengkapi." action={<RefreshCacheButton />} />
 
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        {cards.map(({ label, value, sub, href, icon: Icon }) => (
-          <Link key={label} href={href} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-colors hover:border-slate-300">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-slate-500">{label}</span>
-              <Icon className="h-5 w-5 text-slate-400" aria-hidden />
-            </div>
-            <p className="mt-2 text-3xl font-bold text-slate-900">{value}</p>
-            <p className="text-xs text-slate-500">{sub}</p>
-          </Link>
-        ))}
-      </div>
-
-      <div className="mt-6 grid gap-4 lg:grid-cols-[1.2fr_1fr]">
-        <Card className="p-5">
-          <h2 className="flex items-center gap-2 font-bold text-slate-900">
-            <WhatsAppIcon size={20} className="text-[#25D366]" /> Pemesanan via WhatsApp
-          </h2>
-          <p className="mt-2 text-sm leading-relaxed text-slate-600">
-            Semua tombol pesan di website mengarah ke WhatsApp
-            {settings.whatsapp ? (
-              <>
-                {' '}
-                <strong className="text-slate-900">{displayPhone(settings.whatsapp)}</strong>
-              </>
-            ) : (
-              ' (nomor belum diisi)'
-            )}
-            . Pesan otomatis berisi nama paket, tanggal, dan lokasi acara yang diisi pengunjung.
-          </p>
-          <Link href="/admin/pengaturan" className="mt-4 inline-flex h-10 items-center gap-2 rounded-lg border border-slate-300 px-3 text-sm font-semibold text-slate-800 hover:bg-slate-50">
-            <Settings className="h-4 w-4" aria-hidden /> Ganti nomor WhatsApp
-          </Link>
-        </Card>
-
-        <Card className="p-4">
-          <h2 className="mb-3 font-bold text-slate-900">Aksi cepat</h2>
-          <ul className="space-y-2">
-            {[
-              { href: '/admin/paket/baru', label: 'Tambah paket', icon: Plus },
-              { href: '/admin/galeri/baru', label: 'Upload foto acara', icon: Images },
-              { href: '/admin/testimoni/baru', label: 'Tambah testimoni', icon: MessageSquareQuote },
-              { href: '/admin/faq/baru', label: 'Tambah FAQ', icon: CircleHelp },
-            ].map(({ href, label, icon: Icon }) => (
-              <li key={href}>
-                <Link href={href} className="flex items-center gap-3 rounded-lg border border-slate-200 p-3 text-sm font-semibold text-slate-800 hover:bg-slate-50">
-                  <Icon className="h-5 w-5 text-brand-500" aria-hidden /> {label}
-                  <ArrowRight className="ml-auto h-4 w-4 text-slate-400" aria-hidden />
+      <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr]">
+        <section aria-labelledby="checklist">
+          <div className="flex items-baseline justify-between border-b border-stone-300 pb-2">
+            <h2 id="checklist" className="text-lg font-semibold">
+              Perlu dilengkapi
+            </h2>
+            <span className="font-mono text-sm text-stone-500">
+              {doneCount}/{checklist.length} lengkap
+            </span>
+          </div>
+          <ul>
+            {checklist.map((c) => (
+              <li key={c.label} className="border-b border-stone-200">
+                <Link href={c.href} className="group grid grid-cols-[1.5rem_1fr_auto] items-baseline gap-3 py-3">
+                  <span className={cn('font-mono text-sm', c.done ? 'text-emerald-700' : 'text-brand-600')} aria-hidden>
+                    {c.done ? '✓' : '○'}
+                  </span>
+                  <span>
+                    <span className={cn(c.done ? 'text-stone-500' : 'text-stone-900')}>{c.label}</span>
+                    <span className="sr-only">{c.done ? ' (sudah)' : ' (belum)'}</span>
+                    {c.note && <span className="block text-sm text-stone-500">{c.note}</span>}
+                  </span>
+                  {!c.done && <span className="text-sm text-stone-900 underline-offset-4 group-hover:underline">Lengkapi →</span>}
                 </Link>
               </li>
             ))}
           </ul>
-          <p className="mt-4 text-xs leading-relaxed text-slate-500">
-            Habis mengedit Google Sheet secara langsung? Klik <strong>Muat ulang data website</strong> supaya perubahan langsung tampil.
-          </p>
-        </Card>
+        </section>
+
+        <div className="space-y-10">
+          <section aria-labelledby="wa">
+            <h2 id="wa" className="border-b border-stone-300 pb-2 text-lg font-semibold">
+              Pemesanan via WhatsApp
+            </h2>
+            <p className="mt-3 font-mono text-2xl">{s.whatsapp ? displayPhone(s.whatsapp) : '—'}</p>
+            <p className="mt-1 text-sm text-stone-600">Semua tombol pesan di website mengarah ke nomor ini.</p>
+            <Link href="/admin/pengaturan" className="mt-3 inline-block text-sm underline underline-offset-4">
+              Ganti nomor
+            </Link>
+          </section>
+
+          <section aria-labelledby="isi">
+            <h2 id="isi" className="border-b border-stone-300 pb-2 text-lg font-semibold">
+              Isi website
+            </h2>
+            <dl>
+              {contents.map(([k, v, href]) => (
+                <div key={k} className="border-b border-stone-200">
+                  <Link href={href} className="flex items-baseline justify-between py-2.5 hover:underline">
+                    <dt>{k}</dt>
+                    <dd className="font-mono text-sm text-stone-600">{v}</dd>
+                  </Link>
+                </div>
+              ))}
+            </dl>
+            <p className="mt-3 text-[13px] leading-relaxed text-stone-500">
+              Habis mengedit Google Sheet secara langsung? Klik <strong className="font-medium text-stone-700">Muat ulang data website</strong> agar perubahan langsung tampil.
+            </p>
+          </section>
+        </div>
       </div>
     </div>
   );

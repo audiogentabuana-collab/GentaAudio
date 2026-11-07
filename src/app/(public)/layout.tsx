@@ -4,7 +4,7 @@ import { SiteHeader } from '@/features/public/components/SiteHeader';
 import { SiteFooter } from '@/features/public/components/SiteFooter';
 import { FloatingWhatsApp } from '@/features/public/components/FloatingWhatsApp';
 import { JsonLd } from '@/features/public/components/JsonLd';
-import { waLink } from '@/shared/lib/whatsapp';
+import { displayPhone, waLink } from '@/shared/lib/whatsapp';
 import { localBusinessJsonLd } from '@/features/public/seo';
 import { driveImageUrl } from '@/shared/lib/drive-image';
 
@@ -35,11 +35,11 @@ export default async function PublicLayout({ children }: { children: React.React
   const wa = waLink(s.whatsapp, s.wa_default_message || `Halo ${s.business_name}, saya ingin bertanya.`);
   return (
     <div className="flex min-h-dvh flex-col bg-ink-950 text-ink-100">
-      <a href="#konten" className="sr-only z-[70] rounded-lg bg-brand-400 px-4 py-2 font-semibold text-ink-950 focus:not-sr-only focus:fixed focus:left-3 focus:top-3">
+      <a href="#konten" className="sr-only z-[70] bg-brand-400 px-4 py-2 font-semibold text-ink-950 focus:not-sr-only focus:fixed focus:left-3 focus:top-3">
         Lewati ke konten
       </a>
       <JsonLd data={localBusinessJsonLd(s)} />
-      <SiteHeader name={s.business_name} logoId={s.logo_id} waHref={wa} />
+      <SiteHeader name={s.business_name} logoId={s.logo_id} waHref={wa} phone={displayPhone(s.whatsapp)} />
       <main id="konten" className="flex-1">
         {children}
       </main>

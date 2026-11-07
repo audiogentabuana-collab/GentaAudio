@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState, useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Save, Star } from 'lucide-react';
+import { Star } from 'lucide-react';
 import type { Category, ResourceName, Spec } from '@/features/content/types';
 import { fieldErrors, resourceSchemas } from '@/features/content/schemas';
 import { resourceByName, type FieldDef } from '../resources';
@@ -21,7 +21,7 @@ function PriceInput({ id, value, onChange, invalid }: { id: string; value: numbe
   const display = value ? new Intl.NumberFormat('id-ID').format(value) : '';
   return (
     <div className="relative">
-      <span className="pointer-events-none absolute inset-y-0 left-3.5 flex items-center text-slate-500">Rp</span>
+      <span className="pointer-events-none absolute inset-y-0 left-3.5 flex items-center text-stone-500">Rp</span>
       <input
         id={id}
         inputMode="numeric"
@@ -39,8 +39,8 @@ function RatingInput({ value, onChange }: { value: number; onChange: (n: number)
   return (
     <div className="flex gap-1" role="radiogroup" aria-label="Rating">
       {[1, 2, 3, 4, 5].map((n) => (
-        <button key={n} type="button" role="radio" aria-checked={value === n} aria-label={`${n} bintang`} onClick={() => onChange(n)} className="rounded-lg p-1.5 hover:bg-brand-50">
-          <Star className={cn('h-7 w-7', n <= value ? 'text-brand-400' : 'text-slate-300')} fill="currentColor" aria-hidden />
+        <button key={n} type="button" role="radio" aria-checked={value === n} aria-label={`${n} bintang`} onClick={() => onChange(n)} className="rounded-[3px] p-1.5 hover:bg-brand-50">
+          <Star className={cn('h-7 w-7', n <= value ? 'text-brand-400' : 'text-stone-300')} fill="currentColor" aria-hidden />
         </button>
       ))}
     </div>
@@ -147,8 +147,8 @@ export function ResourceForm({
             ))}
           </select>
         ) : (
-          <p className="rounded-xl bg-amber-50 p-3 text-sm text-amber-800">
-            Belum ada kategori. <Link href="/admin/kategori/baru" className="font-semibold underline">Buat kategori dulu</Link>.
+          <p className="rounded-[3px] border border-brand-300 bg-brand-50 p-3 text-sm text-stone-900">
+            Belum ada kategori. <Link href="/admin/kategori/baru" className="underline">Buat kategori dulu</Link>.
           </p>
         );
         break;
@@ -158,8 +158,8 @@ export function ResourceForm({
       case 'specs':
         return (
           <fieldset key={f.name} className="sm:col-span-2">
-            <legend className="mb-1.5 text-sm font-semibold text-slate-800">{f.label}</legend>
-            {f.help && <p className="mb-2 text-xs text-slate-500">{f.help}</p>}
+            <legend className="mb-1.5 text-sm font-medium text-stone-900">{f.label}</legend>
+            {f.help && <p className="mb-2 text-xs text-stone-500">{f.help}</p>}
             <SpecsField value={(v as Spec[]) ?? []} onChange={(s) => set(f.name, s)} error={err} />
           </fieldset>
         );
@@ -168,8 +168,8 @@ export function ResourceForm({
         const ids = f.type === 'image' ? (v ? [String(v)] : []) : ((v as string[]) ?? []);
         return (
           <fieldset key={f.name} className="sm:col-span-2">
-            <legend className="mb-1.5 text-sm font-semibold text-slate-800">{f.label}</legend>
-            {f.help && <p className="mb-2 text-xs text-slate-500">{f.help}</p>}
+            <legend className="mb-1.5 text-sm font-medium text-stone-900">{f.label}</legend>
+            {f.help && <p className="mb-2 text-xs text-stone-500">{f.help}</p>}
             <ImagesField id={fid} value={ids} single={f.type === 'image'} max={f.maxImages} error={err} onChange={(next) => set(f.name, f.type === 'image' ? next[0] ?? '' : next)} />
           </fieldset>
         );
@@ -186,20 +186,20 @@ export function ResourceForm({
 
   return (
     <form onSubmit={submit} noValidate className="pb-24">
-      <Link href={listHref} className="mb-4 inline-flex items-center gap-1 text-sm font-medium text-slate-500 hover:text-slate-900">
-        <ArrowLeft className="h-4 w-4" aria-hidden /> Kembali ke daftar {def.label.toLowerCase()}
+      <Link href={listHref} className="mb-4 inline-block text-sm text-stone-500 hover:text-stone-900">
+        ← Kembali ke {def.label.toLowerCase()}
       </Link>
-      <h1 className="mb-6 text-2xl font-bold text-slate-900">{id ? `Ubah ${def.singular.toLowerCase()}` : `Tambah ${def.singular.toLowerCase()}`}</h1>
+      <h1 className="mb-8 border-b border-stone-300 pb-6 text-3xl font-semibold tracking-tight text-stone-900">{id ? `Ubah ${def.singular.toLowerCase()}` : `Tambah ${def.singular.toLowerCase()}`}</h1>
 
       <Card className="p-5 sm:p-6">
         <div className="grid gap-5 sm:grid-cols-2">{fieldsMain.map(renderField)}</div>
       </Card>
 
       {fieldsSwitch.length > 0 && (
-        <Card className="mt-4 divide-y divide-slate-100">
+        <Card className="mt-4 divide-y divide-stone-100">
           {fieldsSwitch.map((f) => (
             <label key={f.name} htmlFor={`f-${f.name}`} className="flex cursor-pointer items-center justify-between gap-4 p-4 sm:px-6">
-              <span className="text-sm font-semibold text-slate-800">{f.label}</span>
+              <span className="text-sm font-medium text-stone-900">{f.label}</span>
               <Switch id={`f-${f.name}`} checked={Boolean(values[f.name])} onChange={(b) => set(f.name, b)} label={f.label} />
             </label>
           ))}
@@ -207,8 +207,8 @@ export function ResourceForm({
       )}
 
       {/* Bar simpan menempel di bawah agar mudah dijangkau di HP */}
-      <div className="fixed inset-x-0 bottom-0 z-20 border-t border-slate-200 bg-white/95 p-3 backdrop-blur lg:left-64">
-        <div className="mx-auto flex max-w-5xl items-center justify-between gap-3">
+      <div className="fixed inset-x-0 bottom-0 z-20 border-t border-stone-300 bg-paper/95 p-3 backdrop-blur-sm">
+        <div className="mx-auto flex max-w-6xl px-1 sm:px-5 items-center justify-between gap-3">
           <div>
             {id && (
               <ConfirmDelete
@@ -224,11 +224,11 @@ export function ResourceForm({
             )}
           </div>
           <div className="flex gap-2">
-            <Link href={listHref} className="inline-flex h-11 items-center rounded-xl px-4 text-sm font-semibold text-slate-600 hover:bg-slate-100">
+            <Link href={listHref} className="inline-flex h-11 items-center rounded-[3px] px-4 text-sm text-stone-600 hover:text-stone-900">
               Batal
             </Link>
             <AdminButton type="submit" loading={saving} className="min-w-32">
-              {!saving && <Save className="h-4 w-4" aria-hidden />} {saving ? 'Menyimpan...' : 'Simpan'}
+              {saving ? 'Menyimpan...' : 'Simpan'}
             </AdminButton>
           </div>
         </div>

@@ -18,10 +18,10 @@ export function ChangePasswordForm() {
   );
   return (
     <Card className="p-5 sm:p-6">
-      <h2 className="mb-1 flex items-center gap-2 text-base font-bold text-slate-900">
-        <KeyRound className="h-5 w-5 text-slate-400" aria-hidden /> Ganti password
+      <h2 className="mb-1 flex items-center gap-2 text-base font-bold text-stone-900">
+        <KeyRound className="h-5 w-5 text-stone-400" aria-hidden /> Ganti password
       </h2>
-      <p className="mb-4 text-sm text-slate-500">Minimal 8 karakter. Gunakan kombinasi yang tidak mudah ditebak.</p>
+      <p className="mb-4 text-sm text-stone-500">Minimal 8 karakter. Gunakan kombinasi yang tidak mudah ditebak.</p>
       <form
         className="grid gap-4 sm:grid-cols-3"
         onSubmit={(e) => {

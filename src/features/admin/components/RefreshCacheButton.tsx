@@ -18,7 +18,7 @@ export function RefreshCacheButton() {
           toast(res.ok ? 'success' : 'error', res.message ?? '');
         })
       }
-      className="inline-flex h-11 items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-800 hover:bg-slate-50 disabled:opacity-60"
+      className="inline-flex h-10 items-center gap-2 rounded-[3px] border border-stone-300 bg-white px-4 text-sm font-medium text-stone-900 hover:border-stone-900 disabled:opacity-60"
     >
       <RefreshCw className={pending ? 'h-4 w-4 animate-spin' : 'h-4 w-4'} aria-hidden /> Muat ulang data website
     </button>

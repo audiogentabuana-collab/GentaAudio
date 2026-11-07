@@ -26,7 +26,7 @@
 - Server action admin mengembalikan `ActionResult {ok, message?, errors?, data?}`; field error dari Zod via `fieldErrors()`.
 - **Jangan mengekspor konstanta/non-komponen dari file `'use client'` lalu memakainya di server component** (akan jadi client reference → `undefined`). Contoh yang sudah dipindah: `NAV` → `features/public/components/nav.ts`.
 - Ikon: `lucide-react` (v1 tidak punya logo brand → `src/shared/components/BrandIcons.tsx`). Dilarang emoji di UI.
-- Tema publik: hitam netral `ink-*` + oranye `brand-400 #ff7f3e` + aksen `lime-accent`; font Poppins; tombol `rounded-md`. Admin: tema terang slate + aksen brand. Token di `src/app/globals.css` (`@theme`).
+- **Arah visual "rider teknis"** (redesign 2026-11-07 karena versi sebelumnya dinilai pemilik terlalu "AI slop"): lembar spesifikasi/daftar harga ala tim sound. Publik: hitam hangat `ink-*`, oranye sinyal `brand-400 #ff6b1a` hanya untuk aksi utama/harga/aktif, font Familjen Grotesk + IBM Plex Mono (`font-mono`, utilitas `label-mono`) untuk angka & label, garis tipis sebagai struktur, sudut `rounded-[3px]`. Admin: kertas `bg-paper` + palet `stone-*`, navigasi atas, daftar berbentuk tabel, halaman Ringkasan berisi checklist kelengkapan. **Hindari**: label huruf kapital di atas setiap judul, kartu ikon dalam kotak membulat, grid kartu seragam, gradien/glow, ilustrasi dekoratif, klaim bisnis yang tidak berasal dari data pemilik. Token di `src/app/globals.css` (`@theme`).
 - CRUD admin config-driven: tambah field → update `apps-script/src/Config.js` (TABLES), `src/features/content/types.ts`, `schemas.ts`, `src/features/admin/resources.ts`.
 - Bahasa UI & pesan error: Bahasa Indonesia.
 

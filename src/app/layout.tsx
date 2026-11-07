@@ -1,13 +1,19 @@
 import type { Metadata, Viewport } from 'next';
-import { Poppins } from 'next/font/google';
+import { Familjen_Grotesk, IBM_Plex_Mono } from 'next/font/google';
 import { siteUrl } from '@/shared/lib/site';
 import './globals.css';
 
-const poppins = Poppins({
+const familjen = Familjen_Grotesk({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
   display: 'swap',
-  variable: '--font-poppins',
+  variable: '--font-familjen',
+});
+
+const plexMono = IBM_Plex_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  display: 'swap',
+  variable: '--font-plex-mono',
 });
 
 export const metadata: Metadata = {
@@ -17,14 +23,14 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#121212',
+  themeColor: '#0f0f0e',
   width: 'device-width',
   initialScale: 1,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="id" className={poppins.variable}>
+    <html lang="id" className={`${familjen.variable} ${plexMono.variable}`}>
       <body className="min-h-dvh font-sans">{children}</body>
     </html>
   );

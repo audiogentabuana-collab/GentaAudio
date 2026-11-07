@@ -188,7 +188,7 @@ test.describe('admin', () => {
   test('urutan FAQ bisa diubah', async ({ page }) => {
     await login(page);
     await page.goto('/admin/faq');
-    const titles = page.locator('main ul li a.font-semibold');
+    const titles = page.locator('main ul li a.font-medium');
     const first = await titles.nth(0).textContent();
     await page.getByRole('button', { name: 'Turunkan urutan' }).first().click();
     await expect(page.getByText('Gagal menyimpan urutan')).toHaveCount(0);

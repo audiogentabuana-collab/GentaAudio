@@ -292,7 +292,7 @@ Buka `https://domain-anda/admin` lalu login.
 
 | Menu | Kegunaan |
 |---|---|
-| **Dashboard** | Ringkasan isi website, nomor WhatsApp aktif, dan aksi cepat. Tombol **Muat ulang data website** dipakai setelah Anda mengedit Google Sheet secara langsung. |
+| **Ringkasan** | Daftar hal yang masih perlu dilengkapi (nomor WA contoh, foto paket kosong, dll.), nomor WhatsApp aktif, dan jumlah isi website. Tombol **Muat ulang data website** dipakai setelah Anda mengedit Google Sheet secara langsung. |
 | **Paket & Pricelist** | Tambah atau ubah paket, harga, spesifikasi, dan foto. Centang **Unggulan** agar paket tampil di beranda. |
 | **Kategori Paket** | Kelompok paket untuk filter di Pricelist. |
 | **Peralatan** | Alat yang disewakan satuan. |
@@ -307,8 +307,8 @@ Tips:
 - **Tombol panah** mengatur urutan tampil. **Saklar Tampil** menyembunyikan item tanpa menghapusnya.
 - Foto dari HP otomatis dikecilkan sebelum di-upload, jadi tidak perlu diedit dulu. Foto pertama menjadi foto utama.
 - Menghapus paket/album juga memindahkan fotonya ke Trash Google Drive (bisa dipulihkan selama 30 hari).
-- Tagline beranda: separuh awal otomatis berwarna oranye. Untuk mengatur sendiri, pisahkan dengan `|`, mis. `Sewa Sound System | untuk Setiap Acara`.
-- Mengedit langsung di Google Sheet boleh. Kalau tampilan website belum berubah, klik **Muat ulang data website** di Dashboard.
+- Tagline beranda: bagian sebelum tanda `|` tampil terang, sisanya abu-abu (tanpa `|`, dibagi otomatis di tengah). Contoh: `Sewa Sound System | untuk Setiap Acara`.
+- Mengedit langsung di Google Sheet boleh. Kalau tampilan website belum berubah, klik **Muat ulang data website** di halaman **Ringkasan**.
 
 ---
 
@@ -435,4 +435,4 @@ CI GitHub Actions (`.github/workflows/ci.yml`) menjalankan semua langkah di atas
 | Admin tidak bisa login setelah setup | Pastikan `ADMIN_INITIAL_PASSWORD_HASH` berisi seluruh baris `scrypt$...`, lalu cek sheet `admins`. Kalau perlu, hapus barisnya dan jalankan `setup()` lagi. |
 | "Terlalu banyak percobaan login" | Tunggu 15 menit, atau jalankan `clearCache` di editor Apps Script. |
 | Gambar tidak muncul | Pastikan file di folder upload berstatus "Anyone with the link". Cek juga kuota Image Optimization Vercel (`NEXT_IMAGE_UNOPTIMIZED=true`). |
-| Website belum berubah setelah edit di Sheet | Dashboard admin → **Muat ulang data website**. |
+| Website belum berubah setelah edit di Sheet | Admin → **Ringkasan** → **Muat ulang data website**. |

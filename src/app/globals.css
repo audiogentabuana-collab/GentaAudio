@@ -1,31 +1,36 @@
 @import 'tailwindcss';
 
+/*
+ * Arah visual: "rider teknis" — lembar spesifikasi & daftar harga ala tim sound.
+ * Tipografi + garis tipis sebagai struktur, angka & label teknis memakai font mono,
+ * oranye hanya sebagai sinyal (harga, status aktif, tombol utama). Tanpa gradien/glow.
+ */
 @theme {
-  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: var(--font-familjen), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
-  /* Palet: hitam netral + oranye (referensi desain pemilik), aksen hijau lime */
-  --color-ink-950: #121212;
-  --color-ink-900: #181818;
-  --color-ink-850: #1d1d1d;
-  --color-ink-800: #232323;
-  --color-ink-700: #2f2f2f;
-  --color-ink-600: #444444;
-  --color-ink-400: #9b9b9b;
-  --color-ink-300: #c2c2c2;
-  --color-ink-100: #ededed;
+  /* Hitam hangat (bukan biru), teks putih tulang */
+  --color-ink-950: #0f0f0e;
+  --color-ink-900: #151514;
+  --color-ink-850: #1b1b19;
+  --color-ink-800: #232320;
+  --color-ink-700: #34332f;
+  --color-ink-600: #807d75; /* teks sekunder kecil: kontras ≥ 4.5:1 di atas ink-950 */
+  --color-ink-400: #a5a299;
+  --color-ink-300: #c7c3ba;
+  --color-ink-100: #ece9e2;
 
-  --color-brand-50: #fff4ed;
-  --color-brand-100: #ffe3d1;
-  --color-brand-300: #ffa06b;
-  --color-brand-400: #ff7f3e;
-  --color-brand-500: #f26a24;
-  --color-brand-600: #d9581a;
-  --color-brand-700: #a8420f;
+  /* Oranye sinyal */
+  --color-brand-50: #fff3eb;
+  --color-brand-100: #ffe1cc;
+  --color-brand-300: #ff8f52;
+  --color-brand-400: #ff6b1a;
+  --color-brand-500: #ea5a0c;
+  --color-brand-600: #c94a07;
+  --color-brand-700: #9a3905;
 
-  --color-lime-accent: #a8f08c;
-
-  --shadow-glow: 0 20px 50px -24px rgb(255 127 62 / 0.45);
-
+  /* Admin: kertas */
+  --color-paper: #f6f5f1;
 }
 
 @layer base {
@@ -35,10 +40,15 @@
   }
   body {
     @apply antialiased;
+    font-feature-settings: 'ss01', 'tnum';
   }
   :focus-visible {
     outline: 2px solid var(--color-brand-400);
     outline-offset: 2px;
+  }
+  ::selection {
+    background: var(--color-brand-400);
+    color: var(--color-ink-950);
   }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
@@ -52,11 +62,11 @@
 
 @utility container-page {
   width: 100%;
-  max-width: 72rem;
+  max-width: 76rem;
   margin-inline: auto;
-  padding-inline: 1rem;
+  padding-inline: 1.25rem;
   @media (min-width: 640px) {
-    padding-inline: 1.5rem;
+    padding-inline: 2rem;
   }
 }
 
@@ -64,15 +74,12 @@
   text-wrap: balance;
 }
 
-@utility bg-stage {
-  background-color: var(--color-ink-950);
-}
-
-@utility bg-grid {
-  background-image:
-    linear-gradient(to right, rgb(255 255 255 / 0.06) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(255 255 255 / 0.06) 1px, transparent 1px);
-  background-size: 64px 64px;
+/* Label teknis kecil: mono, huruf kapital tipis */
+@utility label-mono {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 /* Halaman dengan CTA lengket di bawah (detail paket, HP): sembunyikan tombol WA melayang

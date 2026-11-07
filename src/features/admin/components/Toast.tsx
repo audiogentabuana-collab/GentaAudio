@@ -29,7 +29,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             key={t.id}
             role={t.type === 'error' ? 'alert' : 'status'}
             className={cn(
-              'pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-xl px-4 py-3 text-sm font-medium shadow-lg ring-1',
+              'pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-[3px] px-4 py-3 text-sm font-medium shadow-lg ring-1',
               t.type === 'success' ? 'bg-emerald-600 text-white ring-emerald-700' : 'bg-red-600 text-white ring-red-700',
             )}
           >

@@ -24,8 +24,8 @@ export default async function OgImage() {
           flexDirection: 'column',
           justifyContent: 'space-between',
           padding: 72,
-          background: '#121212',
-          color: '#ededed',
+          background: '#0f0f0e',
+          color: '#ece9e2',
           backgroundImage:
             'linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px)',
           backgroundSize: '64px 64px',
@@ -34,20 +34,20 @@ export default async function OgImage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 36 }}>
           <div style={{ display: 'flex', alignItems: 'flex-end', gap: 5, height: 40 }}>
             {[18, 32, 40, 26, 14].map((h, i) => (
-              <div key={i} style={{ width: 6, height: h, background: '#ff7f3e', borderRadius: 3 }} />
+              <div key={i} style={{ width: 6, height: h, background: '#ff6b1a', borderRadius: 3 }} />
             ))}
           </div>
           {s.business_name}
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', maxWidth: 900 }}>
-          <div style={{ fontSize: 72, fontWeight: 700, lineHeight: 1.1, color: '#ff7f3e' }}>{tagline}</div>
+          <div style={{ fontSize: 72, fontWeight: 700, lineHeight: 1.1, color: '#ff6b1a' }}>{tagline}</div>
           {min > 0 && <div style={{ display: 'flex', marginTop: 24, fontSize: 34, color: '#c2c2c2' }}>{`Paket mulai ${formatRupiah(min)}`}</div>}
         </div>
         <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', fontSize: 28, color: '#9b9b9b' }}>Hajatan · Pernikahan · Event · Sekolah · Kantor</div>
           <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, height: 90 }}>
             {bars.map((h, i) => (
-              <div key={i} style={{ width: 12, height: h * 0.9, background: i % 3 === 0 ? '#a8f08c' : '#ff7f3e', borderRadius: 4 }} />
+              <div key={i} style={{ width: 12, height: h * 0.9, background: i % 3 === 0 ? '#ece9e2' : '#ff6b1a', borderRadius: 4 }} />
             ))}
           </div>
         </div>
