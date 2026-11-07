@@ -12,7 +12,7 @@ import {
   settingsSchema,
 } from '@/features/content/schemas';
 import type { AdminCredential, ResourceName } from '@/features/content/types';
-import { gas, GasError, userMessage } from '@/server/gas/client';
+import { adminMessage, gas, GasError, userMessage } from '@/server/gas/client';
 import { assertAdmin, createSession, destroySession, UnauthorizedError } from '@/server/auth/session';
 import { getDummyHash, hashPassword, verifyPassword } from '@/server/auth/password';
 import { clientIp } from '@/server/http/ip';
@@ -28,7 +28,7 @@ export interface ActionResult<T = unknown> {
 
 function failure(err: unknown): ActionResult<never> {
   if (err instanceof UnauthorizedError) return { ok: false, message: err.message };
-  if (err instanceof GasError) return { ok: false, message: userMessage(err), errors: err.fieldErrors };
+  if (err instanceof GasError) return { ok: false, message: adminMessage(err), errors: err.fieldErrors };
   console.error('[admin action]', err);
   return { ok: false, message: 'Terjadi kesalahan. Silakan coba lagi.' };
 }

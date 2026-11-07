@@ -1,6 +1,7 @@
 import 'server-only';
-import { gas } from '../gas/client';
-import { assertAdmin } from '../auth/session';
+import { redirect, unstable_rethrow } from 'next/navigation';
+import { adminMessage, gas, GasError } from '../gas/client';
+import { assertAdmin, UnauthorizedError } from '../auth/session';
 import type {
   AnalyticsSummary,
   DashboardStats,
@@ -36,4 +37,19 @@ export async function adminStats(): Promise<DashboardStats> {
 export async function adminAnalytics(days: number): Promise<AnalyticsSummary> {
   await assertAdmin();
   return gas<AnalyticsSummary>('analytics.summary', { days });
+}
+
+/**
+ * Jalankan pemuatan data admin; bila gagal, kembalikan pesan penyebab asli
+ * (ditampilkan oleh <LoadError/>) alih-alih menjatuhkan seluruh halaman.
+ */
+export async function tryLoad<T>(fn: () => Promise<T>): Promise<{ ok: true; data: T } | { ok: false; message: string }> {
+  try {
+    return { ok: true, data: await fn() };
+  } catch (err) {
+    unstable_rethrow(err);
+    if (err instanceof UnauthorizedError) redirect('/admin/login');
+    console.error('[admin] gagal memuat data:', err instanceof GasError ? `${err.code} ${err.message}` : err);
+    return { ok: false, message: adminMessage(err) };
+  }
 }

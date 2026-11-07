@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
 import { uploadSchema } from '@/features/content/schemas';
 import { getSession } from '@/server/auth/session';
-import { gas, GasError, userMessage } from '@/server/gas/client';
+import { adminMessage, gas, GasError } from '@/server/gas/client';
 
 /**
  * Upload gambar (1 gambar per request) → Apps Script → Google Drive.
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true, fileId: data.fileId });
   } catch (err) {
     const status = err instanceof GasError && err.code === 'VALIDATION' ? 400 : 502;
-    return NextResponse.json({ ok: false, message: userMessage(err) }, { status });
+    return NextResponse.json({ ok: false, message: adminMessage(err) }, { status });
   }
 }
 
@@ -60,6 +60,6 @@ export async function DELETE(req: NextRequest) {
     await gas('upload.delete', { fileId: fileId.data });
     return NextResponse.json({ ok: true });
   } catch (err) {
-    return NextResponse.json({ ok: false, message: userMessage(err) }, { status: 502 });
+    return NextResponse.json({ ok: false, message: adminMessage(err) }, { status: 502 });
   }
 }

@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowDownRight, ArrowUpRight, Check, Circle, MousePointerClick, Eye, Percent, Users } from 'lucide-react';
-import { adminAnalytics, adminList, adminSettings } from '@/server/data/admin';
+import { adminAnalytics, adminList, adminSettings, tryLoad } from '@/server/data/admin';
+import { LoadError } from '@/features/admin/components/LoadError';
 import { GasError } from '@/server/gas/client';
 import type { AnalyticsSummary } from '@/features/content/types';
 import { Card, PageHeader } from '@/features/admin/components/ui';
@@ -128,7 +129,9 @@ function AnalyticsNotice({ code }: { code: string }) {
 export default async function DashboardPage({ searchParams }: PageProps<'/admin'>) {
   const sp = await searchParams;
   const days = PERIODS.includes(Number(sp.hari) as (typeof PERIODS)[number]) ? Number(sp.hari) : 30;
-  const [{ data: a, error: analyticsError }, s, packages, gallery] = await Promise.all([loadAnalytics(days), adminSettings(), adminList('packages'), adminList('gallery')]);
+  const res = await tryLoad(() => Promise.all([loadAnalytics(days), adminSettings(), adminList('packages'), adminList('gallery')]));
+  if (!res.ok) return <LoadError message={res.message} title="Dashboard gagal dimuat" />;
+  const [{ data: a, error: analyticsError }, s, packages, gallery] = res.data;
 
   const rate = a.totals.visitors ? (a.totals.wa_clicks / a.totals.visitors) * 100 : 0;
   const prevRate = a.previous.visitors ? (a.previous.wa_clicks / a.previous.visitors) * 100 : 0;

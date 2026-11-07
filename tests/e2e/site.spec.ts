@@ -178,6 +178,21 @@ test.describe('admin', () => {
     await expect(page.getByRole('link', { name: 'Paket Uji E2E' })).toHaveCount(0);
   });
 
+  test('tombol Ubah membuka form edit berisi data lalu menyimpan perubahan', async ({ page }) => {
+    await login(page);
+    await page.goto('/admin/faq');
+    await page.getByRole('link', { name: 'Ubah' }).first().click();
+    await expect(page).toHaveURL(/\/admin\/faq\/[0-9a-f-]{36}$/);
+    await expect(page.getByRole('heading', { name: 'Ubah faq' })).toBeVisible();
+    const answer = page.getByLabel('Jawaban');
+    await expect(answer).not.toHaveValue('');
+    await answer.fill('Jawaban diubah lewat E2E.');
+    await page.getByRole('button', { name: 'Simpan' }).click();
+    await expect(page).toHaveURL(/\/admin\/faq$/);
+    await page.goto('/faq');
+    await expect(page.getByText('Jawaban diubah lewat E2E.')).toBeVisible();
+  });
+
   test('validasi form admin menampilkan pesan', async ({ page }) => {
     await login(page);
     await page.goto('/admin/faq/baru');

@@ -135,3 +135,25 @@ export function userMessage(err: unknown): string {
   }
   return 'Terjadi kesalahan. Silakan coba lagi.';
 }
+
+/**
+ * Pesan untuk ADMIN yang sudah login: tampilkan penyebab asli dari Apps Script
+ * (mis. "Script Property DRIVE_FOLDER_ID belum diisi") agar pemilik bisa memperbaikinya.
+ * Jangan dipakai untuk halaman publik.
+ */
+export function adminMessage(err: unknown): string {
+  if (err instanceof GasError) {
+    const hints: Record<string, string> = {
+      UNAUTHORIZED: ' Pastikan GAS_API_KEY di Vercel sama persis dengan Script Property API_KEY, lalu Redeploy.',
+      NOT_FOUND: '',
+      BAD_RESPONSE: '',
+      TIMEOUT: '',
+      NETWORK: ' Periksa GAS_WEB_APP_URL di Vercel.',
+    };
+    const extra = err.code === 'NOT_FOUND' && err.message.startsWith('Action tidak dikenal')
+      ? ' Apps Script yang online masih versi lama: jalankan "npm run gas:push", lalu Terapkan → Kelola deployment → Edit → Versi baru.'
+      : hints[err.code] ?? '';
+    return `${err.message}${extra} [${err.code}]`;
+  }
+  return 'Terjadi kesalahan. Silakan coba lagi.';
+}
