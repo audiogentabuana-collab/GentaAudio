@@ -2,6 +2,7 @@ import 'server-only';
 import { gas } from '../gas/client';
 import { assertAdmin } from '../auth/session';
 import type {
+  AnalyticsSummary,
   DashboardStats,
   ResourceName,
   ResourceRecordMap,
@@ -30,4 +31,9 @@ export async function adminSettings(): Promise<Settings> {
 export async function adminStats(): Promise<DashboardStats> {
   await assertAdmin();
   return gas<DashboardStats>('dashboard.stats');
+}
+
+export async function adminAnalytics(days: number): Promise<AnalyticsSummary> {
+  await assertAdmin();
+  return gas<AnalyticsSummary>('analytics.summary', { days });
 }

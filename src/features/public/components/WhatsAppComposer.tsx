@@ -108,6 +108,7 @@ export function WhatsAppComposer({
 
       <a
         href={href}
+        data-track-pkg={pkg?.slug ?? ''}
         target="_blank"
         rel="noopener noreferrer"
         className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-[3px] bg-brand-400 px-5 text-base font-medium text-ink-950 hover:bg-brand-300 sm:w-auto"

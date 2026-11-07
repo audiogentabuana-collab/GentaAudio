@@ -328,3 +328,67 @@ describe('bundle copy-paste (apps-script/dist/Code.gs)', () => {
     expect((rt.call('packages.list').data as unknown[]).length).toBe(6);
   });
 });
+
+describe('analitik', () => {
+  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jakarta' }).format(new Date());
+  const daysAgo = (n: number) => new Date(Date.parse(today + 'T00:00:00Z') - n * 86400000).toISOString().slice(0, 10);
+  type Summary = {
+    series: { date: string; views: number; visitors: number; wa_clicks: number }[];
+    totals: { views: number; visitors: number; wa_clicks: number };
+    previous: { views: number; visitors: number; wa_clicks: number };
+    pages: { key: string; count: number }[];
+    refs: { key: string; count: number }[];
+    devices: Record<string, number>;
+    packages: { key: string; count: number }[];
+  };
+
+  it('setup membuat sheet analitik & trigger per jam', () => {
+    expect(gas.spreadsheet.getSheetByName('analytics_events')).not.toBeNull();
+    expect(gas.spreadsheet.getSheetByName('analytics_daily')).not.toBeNull();
+  });
+
+  it('track → summary menghitung kunjungan, pengunjung, klik WA, halaman, sumber, paket', () => {
+    const res = gas.call('analytics.track', {
+      events: [
+        { type: 'view', path: '/', ref: 'www.google.com', device: 'mobile', nv: true },
+        { type: 'view', path: '/pricelist?x=1', device: 'mobile', nv: false },
+        { type: 'view', path: '/pricelist', ref: 'instagram.com', device: 'desktop', nv: true },
+        { type: 'wa_click', path: '/pricelist', pkg: 'paket-hajatan-standar' },
+        { type: 'hacker', path: '/' },
+        { type: 'view', path: 'javascript:alert(1)', ref: '<script>' },
+      ],
+    });
+    expect((res.data as { recorded: number }).recorded).toBe(5);
+    const s = gas.call('analytics.summary', { days: 7 }).data as Summary;
+    expect(s.series).toHaveLength(7);
+    expect(s.series.at(-1)!.date).toBe(today);
+    expect(s.totals).toEqual({ views: 4, visitors: 2, wa_clicks: 1 });
+    expect(s.pages.find((p) => p.key === '/pricelist')!.count).toBe(2);
+    expect(s.pages.find((p) => p.key === '/')!.count).toBe(2); // termasuk path tidak valid → '/'
+    expect(s.refs.map((r) => r.key)).toEqual(expect.arrayContaining(['google.com', 'instagram.com', '(langsung)']));
+    expect(s.devices).toEqual({ mobile: 2, desktop: 2 });
+    expect(s.packages).toEqual([{ key: 'paket-hajatan-standar', count: 1 }]);
+  });
+
+  it('aggregateAnalytics merangkum ke harian tanpa mengubah angka & mengosongkan event', () => {
+    gas.call('analytics.track', { events: [{ type: 'view', path: '/', nv: true }, { type: 'wa_click', path: '/' }] });
+    const before = gas.call('analytics.summary', { days: 30 }).data as Summary;
+    expect(gas.run('aggregateAnalytics')).toEqual({ aggregated: 2 });
+    expect(gas.spreadsheet.getSheetByName('analytics_events')!.getLastRow()).toBe(1);
+    gas.call('analytics.track', { events: [{ type: 'view', path: '/faq' }] });
+    gas.run('aggregateAnalytics'); // hari yang sama digabung, bukan baris baru
+    expect(gas.spreadsheet.getSheetByName('analytics_daily')!.getLastRow()).toBe(2);
+    const after = gas.call('analytics.summary', { days: 30 }).data as Summary;
+    expect(after.totals.views).toBe(before.totals.views + 1);
+    expect(after.totals.wa_clicks).toBe(before.totals.wa_clicks);
+  });
+
+  it('periode sebelumnya dihitung terpisah', () => {
+    const sheet = gas.spreadsheet.getSheetByName('analytics_daily')!;
+    sheet.appendRow([daysAgo(10), '50', '20', '5', '{}', '{}', '{}', '{}', '']); // periode sebelumnya (7 hari)
+    sheet.appendRow([daysAgo(3), '7', '3', '1', '{"/":7}', '{}', '{}', '{}', '']); // periode ini
+    const s = gas.call('analytics.summary', { days: 7 }).data as Summary;
+    expect(s.totals.views).toBe(7);
+    expect(s.previous).toEqual({ views: 50, visitors: 20, wa_clicks: 5 });
+  });
+});

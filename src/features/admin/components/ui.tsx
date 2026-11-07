@@ -10,7 +10,7 @@ import { cn } from '@/shared/lib/format';
  */
 
 export const inputCls =
-  'block w-full rounded-[3px] border border-stone-300 bg-white px-3 py-2.5 text-base text-stone-900 placeholder:text-stone-400 focus:border-stone-900 focus:outline-none disabled:bg-stone-100';
+  'block w-full rounded-lg border border-stone-300 bg-white px-3 py-2.5 text-base text-stone-900 placeholder:text-stone-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/15 disabled:bg-stone-100';
 
 export function FieldWrap({
   id,
@@ -70,7 +70,7 @@ export function Switch({
       onClick={() => onChange(!checked)}
       className={cn(
         'relative inline-flex h-6 w-10 shrink-0 items-center rounded-full border transition-colors disabled:opacity-50',
-        checked ? 'border-stone-900 bg-stone-900' : 'border-stone-300 bg-stone-200',
+        checked ? 'border-brand-500 bg-brand-500' : 'border-stone-300 bg-stone-200',
       )}
     >
       <span className={cn('inline-block h-4 w-4 rounded-full bg-white transition-transform', checked ? 'translate-x-[1.1rem]' : 'translate-x-0.5')} />
@@ -80,15 +80,15 @@ export function Switch({
 
 /** Blok konten: putih dengan garis tipis, tanpa bayangan. */
 export function Card({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn('rounded-[3px] border border-stone-200 bg-white', className)}>{children}</div>;
+  return <div className={cn('rounded-xl border border-stone-200 bg-white shadow-[0_1px_2px_rgba(28,25,23,0.04)]', className)}>{children}</div>;
 }
 
 export function PageHeader({ title, description, action }: { title: string; description?: string; action?: ReactNode }) {
   return (
-    <div className="mb-8 flex flex-col gap-4 border-b border-stone-300 pb-6 sm:flex-row sm:items-end sm:justify-between">
+    <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
       <div>
-        <h1 className="text-3xl font-semibold tracking-tight text-stone-900">{title}</h1>
-        {description && <p className="mt-2 max-w-2xl text-stone-600">{description}</p>}
+        <h1 className="text-2xl font-semibold tracking-tight text-stone-900">{title}</h1>
+        {description && <p className="mt-1 max-w-2xl text-sm text-stone-500">{description}</p>}
       </div>
       {action}
     </div>
@@ -103,7 +103,7 @@ export function AdminButton({
   ...props
 }: React.ComponentProps<'button'> & { variant?: 'primary' | 'secondary' | 'danger' | 'ghost'; loading?: boolean }) {
   const styles = {
-    primary: 'bg-stone-900 text-white hover:bg-stone-700',
+    primary: 'bg-brand-500 text-white hover:bg-brand-600',
     secondary: 'border border-stone-300 bg-white text-stone-900 hover:border-stone-900',
     danger: 'bg-red-700 text-white hover:bg-red-600',
     ghost: 'text-stone-600 hover:text-stone-900',
@@ -113,7 +113,7 @@ export function AdminButton({
       {...props}
       disabled={props.disabled || loading}
       className={cn(
-        'inline-flex h-10 items-center justify-center gap-2 rounded-[3px] px-4 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60',
+        'inline-flex h-10 items-center justify-center gap-2 rounded-lg px-4 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60',
         styles,
         className,
       )}
@@ -166,7 +166,7 @@ export function ConfirmDelete({
             setAsking(false);
           }
         }}
-        className="inline-flex h-8 items-center gap-1 rounded-[3px] bg-red-700 px-2.5 text-white disabled:opacity-60"
+        className="inline-flex h-8 items-center gap-1 rounded-lg bg-red-700 px-2.5 text-white disabled:opacity-60"
       >
         {busy && <LoaderCircle className="h-3.5 w-3.5 animate-spin" aria-hidden />} Ya
       </button>

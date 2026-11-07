@@ -128,7 +128,7 @@ export function SettingsForm({ initial }: { initial: Settings }) {
           </div>
         </Card>
       ))}
-      <div className="fixed inset-x-0 bottom-0 z-20 border-t border-stone-300 bg-paper/95 p-3 backdrop-blur-sm">
+      <div className="fixed inset-x-0 bottom-0 z-20 border-t border-stone-200 bg-white/95 p-3 backdrop-blur-sm lg:left-60">
         <div className="mx-auto flex max-w-6xl px-1 sm:px-5 justify-end">
           <AdminButton type="submit" loading={saving} className="min-w-40">
             {saving ? 'Menyimpan...' : 'Simpan pengaturan'}

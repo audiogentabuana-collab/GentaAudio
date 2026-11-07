@@ -143,3 +143,14 @@ export interface ResourceRecordMap {
   testimonials: Testimonial;
   faqs: Faq;
 }
+
+export interface AnalyticsSummary {
+  range: { from: string; to: string; days: number };
+  series: { date: string; views: number; visitors: number; wa_clicks: number }[];
+  totals: { views: number; visitors: number; wa_clicks: number };
+  previous: { views: number; visitors: number; wa_clicks: number };
+  pages: { key: string; count: number }[];
+  refs: { key: string; count: number }[];
+  devices: Record<string, number>;
+  packages: { key: string; count: number }[];
+}

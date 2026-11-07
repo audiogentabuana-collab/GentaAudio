@@ -31,7 +31,7 @@ export function LoginForm({ next }: { next?: string }) {
         </div>
         {state.errors?.password && <p className="mt-1 text-sm text-red-600">{state.errors.password}</p>}
       </div>
-      <button type="submit" disabled={pending} className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-[3px] bg-stone-900 font-medium text-white hover:bg-stone-700 disabled:opacity-60">
+      <button type="submit" disabled={pending} className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-brand-500 font-medium text-white hover:bg-brand-600 disabled:opacity-60">
         {pending && <LoaderCircle className="h-5 w-5 animate-spin" aria-hidden />}
         {pending ? 'Memeriksa...' : 'Masuk'}
       </button>

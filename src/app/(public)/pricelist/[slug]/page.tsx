@@ -87,7 +87,7 @@ export default async function PackageDetailPage({ params }: PageProps<'/pricelis
             {pkg.description && <p className="mt-6 max-w-2xl whitespace-pre-line text-lg leading-relaxed text-ink-300">{pkg.description}</p>}
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <ButtonLink href={wa} external size="lg">
+              <ButtonLink href={wa} external size="lg" data-track-pkg={pkg.slug}>
                 <WhatsAppIcon size={18} /> Pesan via WhatsApp
               </ButtonLink>
               <ButtonLink href={`/kontak?paket=${encodeURIComponent(pkg.slug)}#booking`} variant="outline" size="lg">
@@ -130,7 +130,7 @@ export default async function PackageDetailPage({ params }: PageProps<'/pricelis
             <p className="truncate text-sm text-ink-400">{pkg.name}</p>
             <p className="font-mono text-ink-100">{formatRupiah(pkg.price)}</p>
           </div>
-          <ButtonLink href={wa} external className="shrink-0">
+          <ButtonLink href={wa} external className="shrink-0" data-track-pkg={pkg.slug}>
             <WhatsAppIcon size={16} /> Pesan
           </ButtonLink>
         </div>

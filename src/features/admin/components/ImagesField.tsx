@@ -95,7 +95,7 @@ export function ImagesField({
     <div>
       <ul className={cn('grid gap-3', single ? 'grid-cols-1 sm:max-w-xs' : 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4')}>
         {value.map((fid, i) => (
-          <li key={fid} className="group relative overflow-hidden rounded-[3px] border border-stone-200 bg-stone-100">
+          <li key={fid} className="group relative overflow-hidden rounded-lg border border-stone-200 bg-stone-100">
             <div className="relative aspect-[4/3]">
               <Image src={previews[fid] ?? driveImageUrl(fid, 600)} alt={`Foto ${i + 1}`} fill sizes="200px" unoptimized className="object-cover" />
             </div>
@@ -107,20 +107,20 @@ export function ImagesField({
             <div className="flex items-center justify-between gap-1 border-t border-stone-200 bg-white p-1">
               {!single ? (
                 <div className="flex">
-                  <button type="button" onClick={() => move(i, -1)} disabled={i === 0} aria-label="Geser ke kiri" className="flex h-9 w-9 items-center justify-center rounded-[3px] text-stone-600 hover:bg-stone-100 disabled:opacity-30"><ArrowLeft className="h-4 w-4" /></button>
-                  <button type="button" onClick={() => move(i, 1)} disabled={i === value.length - 1} aria-label="Geser ke kanan" className="flex h-9 w-9 items-center justify-center rounded-[3px] text-stone-600 hover:bg-stone-100 disabled:opacity-30"><ArrowRight className="h-4 w-4" /></button>
+                  <button type="button" onClick={() => move(i, -1)} disabled={i === 0} aria-label="Geser ke kiri" className="flex h-9 w-9 items-center justify-center rounded-lg text-stone-600 hover:bg-stone-100 disabled:opacity-30"><ArrowLeft className="h-4 w-4" /></button>
+                  <button type="button" onClick={() => move(i, 1)} disabled={i === value.length - 1} aria-label="Geser ke kanan" className="flex h-9 w-9 items-center justify-center rounded-lg text-stone-600 hover:bg-stone-100 disabled:opacity-30"><ArrowRight className="h-4 w-4" /></button>
                 </div>
               ) : (
                 <span />
               )}
-              <button type="button" onClick={() => remove(fid)} aria-label="Hapus foto" className="flex h-9 items-center gap-1 rounded-[3px] px-2 text-sm font-semibold text-red-600 hover:bg-red-50">
+              <button type="button" onClick={() => remove(fid)} aria-label="Hapus foto" className="flex h-9 items-center gap-1 rounded-lg px-2 text-sm font-semibold text-red-600 hover:bg-red-50">
                 <X className="h-4 w-4" aria-hidden /> Hapus
               </button>
             </div>
           </li>
         ))}
         {pending.map((p) => (
-          <li key={p.key} className="flex aspect-[4/3] flex-col items-center justify-center gap-2 rounded-[3px] border border-dashed border-stone-300 bg-white p-2 text-center text-xs text-stone-500">
+          <li key={p.key} className="flex aspect-[4/3] flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-stone-300 bg-white p-2 text-center text-xs text-stone-500">
             <LoaderCircle className="h-6 w-6 animate-spin text-brand-500" aria-hidden />
             <span className="line-clamp-2">Mengunggah {p.name}</span>
           </li>
@@ -131,7 +131,7 @@ export function ImagesField({
               type="button"
               onClick={() => inputRef.current?.click()}
               disabled={pending.length > 0 && !!single}
-              className="flex aspect-[4/3] w-full flex-col items-center justify-center gap-2 rounded-[3px] border-2 border-dashed border-stone-300 bg-white text-sm font-semibold text-stone-600 hover:border-brand-500 hover:text-brand-700"
+              className="flex aspect-[4/3] w-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-stone-300 bg-white text-sm font-semibold text-stone-600 hover:border-brand-500 hover:text-brand-700"
             >
               <ImagePlus className="h-7 w-7" aria-hidden />
               {single && value.length ? 'Ganti foto' : 'Tambah foto'}

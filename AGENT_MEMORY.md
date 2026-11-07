@@ -26,9 +26,15 @@
 - Server action admin mengembalikan `ActionResult {ok, message?, errors?, data?}`; field error dari Zod via `fieldErrors()`.
 - **Jangan mengekspor konstanta/non-komponen dari file `'use client'` lalu memakainya di server component** (akan jadi client reference → `undefined`). Contoh yang sudah dipindah: `NAV` → `features/public/components/nav.ts`.
 - Ikon: `lucide-react` (v1 tidak punya logo brand → `src/shared/components/BrandIcons.tsx`). Dilarang emoji di UI.
-- **Arah visual "rider teknis"** (redesign 2026-11-07 karena versi sebelumnya dinilai pemilik terlalu "AI slop"): lembar spesifikasi/daftar harga ala tim sound. Publik: hitam hangat `ink-*`, oranye sinyal `brand-400 #ff6b1a` hanya untuk aksi utama/harga/aktif, font Familjen Grotesk + IBM Plex Mono (`font-mono`, utilitas `label-mono`) untuk angka & label, garis tipis sebagai struktur, sudut `rounded-[3px]`. Admin: kertas `bg-paper` + palet `stone-*`, navigasi atas, daftar berbentuk tabel, halaman Ringkasan berisi checklist kelengkapan. **Hindari**: label huruf kapital di atas setiap judul, kartu ikon dalam kotak membulat, grid kartu seragam, gradien/glow, ilustrasi dekoratif, klaim bisnis yang tidak berasal dari data pemilik. Token di `src/app/globals.css` (`@theme`).
+- **Arah visual "rider teknis"** (redesign 2026-11-07 karena versi sebelumnya dinilai pemilik terlalu "AI slop"): lembar spesifikasi/daftar harga ala tim sound. Publik: hitam hangat `ink-*`, oranye sinyal `brand-400 #ff6b1a` hanya untuk aksi utama/harga/aktif, font Familjen Grotesk + IBM Plex Mono (`font-mono`, utilitas `label-mono`) untuk angka & label, garis tipis sebagai struktur, sudut `rounded-[3px]`. Admin (revisi 2026-11-07 sesuai referensi pemilik): **sidebar putih** + konten kartu `rounded-xl` di latar `stone-50`, aksen `brand-500`, dashboard analitik (KPI + grafik + daftar peringkat) + checklist kelengkapan. **Hindari**: label huruf kapital di atas setiap judul, kartu ikon dalam kotak membulat, grid kartu seragam, gradien/glow, ilustrasi dekoratif, klaim bisnis yang tidak berasal dari data pemilik. Token di `src/app/globals.css` (`@theme`).
 - CRUD admin config-driven: tambah field → update `apps-script/src/Config.js` (TABLES), `src/features/content/types.ts`, `schemas.ts`, `src/features/admin/resources.ts`.
 - Bahasa UI & pesan error: Bahasa Indonesia.
+
+## 3b. Analitik
+- Browser (`src/features/analytics/Tracker.tsx`, dipasang di layout publik) → `navigator.sendBeacon('/api/t')` → Route Handler `src/app/api/t/route.ts` (Zod + abaikan bot) → `after()` → `analytics.track` (Apps Script `handlers/Analytics.js`, `appendRow` tanpa lock) → sheet `analytics_events`.
+- Trigger per jam `aggregateAnalytics()` merangkum ke `analytics_daily` & menghapus event yang diproses. `analytics.summary {days}` menggabungkan harian + event belum dirangkum.
+- Klik WA per paket memakai atribut `data-track-pkg={slug}` pada tautan wa.me. Tanpa cookie/IP; pengunjung = penanda tanggal di localStorage.
+- Grafik admin: `src/features/admin/components/AnalyticsChart.tsx` (SVG, satu seri per tab, tanpa dual-axis, crosshair+tooltip, tabel sr-only). Warna `#ea5a0c` sudah lolos validator dataviz.
 
 ## 4. Status Fitur
 | Fitur | Status | Catatan |
@@ -39,6 +45,7 @@
 | Admin (login+rate limit, dashboard, CRUD 6 resource, upload multi-gambar, reorder, toggle, pengaturan, ganti password) | Done, tested E2E | Inbox booking dihapus |
 | Form booking + inbox | Dihapus | Keputusan pemilik: semua pemesanan via WhatsApp. Action `bookings.*` & sheet `bookings` di Apps Script dibiarkan (tidak dipakai) agar mudah diaktifkan lagi |
 | SEO (metadata, OG image dinamis, sitemap, robots, JSON-LD LocalBusiness/Service/FAQPage/Breadcrumb) | Done, tested E2E | OG image ada di `src/app/(public)/opengraph-image.tsx` (URL ber-hash karena route group) |
+| Analitik website (kunjungan, pengunjung, klik WA, sumber, perangkat, paket diminati) | Done, tested (unit + E2E) | Butuh `gas:push`, jalankan `setup()` lagi, & update deployment versi baru |
 | CI GitHub Actions | Dibuat | lint, typecheck, vitest, playwright (mode mock) |
 | Deploy nyata ke Google + Vercel | Belum | Butuh akun pemilik; ikuti README bagian 3–6 |
 

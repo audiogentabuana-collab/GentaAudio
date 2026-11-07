@@ -39,7 +39,7 @@ function RatingInput({ value, onChange }: { value: number; onChange: (n: number)
   return (
     <div className="flex gap-1" role="radiogroup" aria-label="Rating">
       {[1, 2, 3, 4, 5].map((n) => (
-        <button key={n} type="button" role="radio" aria-checked={value === n} aria-label={`${n} bintang`} onClick={() => onChange(n)} className="rounded-[3px] p-1.5 hover:bg-brand-50">
+        <button key={n} type="button" role="radio" aria-checked={value === n} aria-label={`${n} bintang`} onClick={() => onChange(n)} className="rounded-lg p-1.5 hover:bg-brand-50">
           <Star className={cn('h-7 w-7', n <= value ? 'text-brand-400' : 'text-stone-300')} fill="currentColor" aria-hidden />
         </button>
       ))}
@@ -147,7 +147,7 @@ export function ResourceForm({
             ))}
           </select>
         ) : (
-          <p className="rounded-[3px] border border-brand-300 bg-brand-50 p-3 text-sm text-stone-900">
+          <p className="rounded-lg border border-brand-300 bg-brand-50 p-3 text-sm text-stone-900">
             Belum ada kategori. <Link href="/admin/kategori/baru" className="underline">Buat kategori dulu</Link>.
           </p>
         );
@@ -189,7 +189,7 @@ export function ResourceForm({
       <Link href={listHref} className="mb-4 inline-block text-sm text-stone-500 hover:text-stone-900">
         ← Kembali ke {def.label.toLowerCase()}
       </Link>
-      <h1 className="mb-8 border-b border-stone-300 pb-6 text-3xl font-semibold tracking-tight text-stone-900">{id ? `Ubah ${def.singular.toLowerCase()}` : `Tambah ${def.singular.toLowerCase()}`}</h1>
+      <h1 className="mb-6 text-2xl font-semibold tracking-tight text-stone-900">{id ? `Ubah ${def.singular.toLowerCase()}` : `Tambah ${def.singular.toLowerCase()}`}</h1>
 
       <Card className="p-5 sm:p-6">
         <div className="grid gap-5 sm:grid-cols-2">{fieldsMain.map(renderField)}</div>
@@ -207,7 +207,7 @@ export function ResourceForm({
       )}
 
       {/* Bar simpan menempel di bawah agar mudah dijangkau di HP */}
-      <div className="fixed inset-x-0 bottom-0 z-20 border-t border-stone-300 bg-paper/95 p-3 backdrop-blur-sm">
+      <div className="fixed inset-x-0 bottom-0 z-20 border-t border-stone-200 bg-white/95 p-3 backdrop-blur-sm lg:left-60">
         <div className="mx-auto flex max-w-6xl px-1 sm:px-5 items-center justify-between gap-3">
           <div>
             {id && (
@@ -224,7 +224,7 @@ export function ResourceForm({
             )}
           </div>
           <div className="flex gap-2">
-            <Link href={listHref} className="inline-flex h-11 items-center rounded-[3px] px-4 text-sm text-stone-600 hover:text-stone-900">
+            <Link href={listHref} className="inline-flex h-11 items-center rounded-lg px-4 text-sm text-stone-600 hover:text-stone-900">
               Batal
             </Link>
             <AdminButton type="submit" loading={saving} className="min-w-32">

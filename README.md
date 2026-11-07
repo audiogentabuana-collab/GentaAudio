@@ -292,7 +292,7 @@ Buka `https://domain-anda/admin` lalu login.
 
 | Menu | Kegunaan |
 |---|---|
-| **Ringkasan** | Daftar hal yang masih perlu dilengkapi (nomor WA contoh, foto paket kosong, dll.), nomor WhatsApp aktif, dan jumlah isi website. Tombol **Muat ulang data website** dipakai setelah Anda mengedit Google Sheet secara langsung. |
+| **Dashboard** | Statistik website 7/30/90 hari: kunjungan, pengunjung, **klik WhatsApp**, rasio klik, grafik harian, perangkat, sumber pengunjung, paket paling diminati, halaman terpopuler. Di bawahnya daftar kelengkapan website (nomor WA contoh, foto paket kosong, dll.). Tombol **Muat ulang data website** dipakai setelah Anda mengedit Google Sheet secara langsung. |
 | **Paket & Pricelist** | Tambah atau ubah paket, harga, spesifikasi, dan foto. Centang **Unggulan** agar paket tampil di beranda. |
 | **Kategori Paket** | Kelompok paket untuk filter di Pricelist. |
 | **Peralatan** | Alat yang disewakan satuan. |
@@ -311,6 +311,15 @@ Tips:
 - Mengedit langsung di Google Sheet boleh. Kalau tampilan website belum berubah, klik **Muat ulang data website** di halaman **Ringkasan**.
 
 ---
+
+### Analitik website
+
+Statistik di Dashboard dicatat sendiri oleh website ke Google Sheet:
+
+- Setiap halaman yang dibuka dan setiap klik tombol WhatsApp dikirim browser ke `/api/t`. Server Next meneruskannya ke Apps Script **setelah** halaman selesai dikirim, jadi pengunjung tidak ikut menunggu.
+- **Tanpa cookie dan tanpa IP.** "Pengunjung" dihitung dari penanda tanggal di `localStorage` (pengunjung unik per hari, lalu dijumlahkan). Bot mesin pencari diabaikan.
+- Event mentah masuk ke sheet `analytics_events` lalu **dirangkum setiap jam** ke `analytics_daily` oleh trigger `aggregateAnalytics` (dipasang otomatis oleh `setup()`).
+- Batasan: angka bisa sedikit meleset (misalnya pengunjung yang memblokir JavaScript tidak tercatat, dan endpoint publik bisa dipanggil iseng). Untuk usaha seperti ini, angkanya cukup sebagai gambaran tren.
 
 ## 8. Daftar action API
 
@@ -331,6 +340,8 @@ Format request: `POST { apiKey, action, payload }`. Format response: `{ success,
 | `<tabel>.delete` | `{ id }` | Foto terkait dipindah ke Trash |
 | `<tabel>.reorder` | `{ ids: [...] }` | Urutan baru |
 | `<tabel>.toggle` | `{ id, is_active }` | Tampil/sembunyi |
+| `analytics.track` | `{ events: [{ type: 'view'\|'wa_click', path, ref?, device?, nv?, pkg? }] }` | Dipanggil server Next (`/api/t`), maks 10 event, ditulis dengan `appendRow` tanpa lock |
+| `analytics.summary` | `{ days }` | Ringkasan untuk dashboard admin (total, periode sebelumnya, seri harian, halaman, sumber, perangkat, paket) |
 | `bookings.*` | – | **Tidak dipakai website saat ini** (pemesanan langsung lewat WhatsApp). Tetap ada di Apps Script bila suatu saat form booking diaktifkan lagi. |
 | `upload.image` | `{ fileName, mimeType, base64 }` | JPG/PNG/WEBP ≤ 2MB, menghasilkan `{ fileId, url }` |
 | `upload.delete` | `{ fileId }` | Hanya file di folder upload |
@@ -338,7 +349,7 @@ Format request: `POST { apiKey, action, payload }`. Format response: `{ success,
 | `auth.loginFailed` / `auth.loginSucceeded` | `{ username, ip }` / `{ id, username }` | |
 | `admins.get` / `admins.changePassword` | `{ id }` / `{ id, password_hash }` | |
 
-`setup()` sengaja **tidak** tersedia lewat API.
+`setup()` dan `aggregateAnalytics()` sengaja **tidak** tersedia lewat API.
 
 ---
 
@@ -356,6 +367,8 @@ Semua tabel memakai kolom standar **`id` (UUID), `sort_order`, `is_active`, `cre
 | `testimonials` | `name`, `event`, `message`, `rating` (1–5) |
 | `faqs` | `question`, `answer` |
 | `bookings` | Tidak dipakai saat ini (sheet tetap dibuat oleh `setup()`, boleh diabaikan) |
+| `analytics_events` | `ts`, `date`, `type`, `path`, `ref`, `device`, `new_visitor`, `pkg` — event mentah, dikosongkan tiap jam |
+| `analytics_daily` | `date`, `views`, `visitors`, `wa_clicks`, `pages`, `refs`, `devices`, `packages` (JSON), `updated_at` — rangkuman per hari |
 | `admins` | `username`, `password_hash`, `role`, `last_login_at` |
 
 Kalau mengedit manual: isi boolean dengan `TRUE`/`FALSE`, dan isi `image_ids`/`specs` dengan JSON yang valid.

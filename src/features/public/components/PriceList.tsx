@@ -59,6 +59,7 @@ export function PriceRow({
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`Pesan ${pkg.name} via WhatsApp`}
+            data-track-pkg={pkg.slug}
             className="rounded-[3px] border border-ink-600 px-3 py-1.5 text-ink-100 hover:border-brand-400 hover:text-brand-400"
           >
             Pesan

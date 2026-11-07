@@ -6,7 +6,14 @@
  * kolom yang belum ada ditambahkan di ujung, dan seed hanya diisi bila sheet kosong.
  */
 
-var SHEET_ORDER = ['settings', 'categories', 'packages', 'equipment', 'gallery', 'testimonials', 'faqs', 'bookings', 'admins'];
+var SHEET_ORDER = ['settings', 'categories', 'packages', 'equipment', 'gallery', 'testimonials', 'faqs', 'bookings', 'admins', 'analytics_events', 'analytics_daily'];
+
+function sheetColumns_(name) {
+  if (name === 'settings') return ['key', 'value', 'updated_at'];
+  if (name === 'analytics_events') return ANALYTICS_EVENTS_COLUMNS;
+  if (name === 'analytics_daily') return ANALYTICS_DAILY_COLUMNS;
+  return getColumns(name);
+}
 
 function setup() {
   getProp('SPREADSHEET_ID', true);
@@ -16,7 +23,7 @@ function setup() {
 
   withLock(function () {
     SHEET_ORDER.forEach(function (name) {
-      var columns = name === 'settings' ? ['key', 'value', 'updated_at'] : getColumns(name);
+      var columns = sheetColumns_(name);
       var res = ensureSheet_(ss, name, columns);
       report.push(name + ': ' + res);
     });
@@ -37,6 +44,7 @@ function setup() {
 
   bumpAllCacheVersions();
   report.push(installEditTrigger_());
+  report.push(installAnalyticsTrigger_());
   report.push(checkConfigText_());
   console.log('SETUP SELESAI\n' + report.join('\n'));
   return report;
@@ -299,6 +307,20 @@ function installEditTrigger_() {
     return 'trigger onEdit: dipasang';
   } catch (e) {
     return 'trigger onEdit: gagal dipasang (' + e.message + ')';
+  }
+}
+
+/** Trigger per jam untuk merangkum event analitik ke analytics_daily. */
+function installAnalyticsTrigger_() {
+  try {
+    var exists = ScriptApp.getProjectTriggers().some(function (t) {
+      return t.getHandlerFunction() === 'aggregateAnalytics';
+    });
+    if (exists) return 'trigger analitik per jam: sudah ada';
+    ScriptApp.newTrigger('aggregateAnalytics').timeBased().everyHours(1).create();
+    return 'trigger analitik per jam: dipasang';
+  } catch (e) {
+    return 'trigger analitik per jam: gagal dipasang (' + e.message + ')';
   }
 }
 

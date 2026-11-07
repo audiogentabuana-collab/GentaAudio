@@ -7,6 +7,7 @@ import { JsonLd } from '@/features/public/components/JsonLd';
 import { displayPhone, waLink } from '@/shared/lib/whatsapp';
 import { localBusinessJsonLd } from '@/features/public/seo';
 import { driveImageUrl } from '@/shared/lib/drive-image';
+import { Tracker } from '@/features/analytics/Tracker';
 
 export async function generateMetadata(): Promise<Metadata> {
   const { settings: s } = await getPublicSnapshot();
@@ -45,6 +46,7 @@ export default async function PublicLayout({ children }: { children: React.React
       </main>
       <SiteFooter s={s} />
       {s.whatsapp && <FloatingWhatsApp href={wa} />}
+      <Tracker />
     </div>
   );
 }

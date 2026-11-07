@@ -20,20 +20,20 @@ export function SpecsField({ value, onChange, error }: { value: Spec[]; onChange
       {value.length > 0 && (
         <ul className="space-y-2">
           {value.map((s, i) => (
-            <li key={i} className="flex flex-col gap-2 rounded-[3px] border border-stone-200 bg-stone-50 p-2 sm:flex-row sm:items-center">
+            <li key={i} className="flex flex-col gap-2 rounded-lg border border-stone-200 bg-stone-50 p-2 sm:flex-row sm:items-center">
               <input aria-label={`Nama item ${i + 1}`} value={s.label} onChange={(e) => update(i, { label: e.target.value })} placeholder="Item (mis. Speaker)" maxLength={60} className={`${inputCls} sm:w-44`} />
               <input aria-label={`Keterangan item ${i + 1}`} value={s.value} onChange={(e) => update(i, { value: e.target.value })} placeholder="Keterangan (mis. 4x 15 inch)" maxLength={200} className={`${inputCls} flex-1`} />
               <div className="flex shrink-0 justify-end gap-1">
-                <button type="button" onClick={() => move(i, -1)} disabled={i === 0} aria-label="Naikkan" className="flex h-10 w-10 items-center justify-center rounded-[3px] text-stone-500 hover:bg-white disabled:opacity-30"><ArrowUp className="h-4 w-4" /></button>
-                <button type="button" onClick={() => move(i, 1)} disabled={i === value.length - 1} aria-label="Turunkan" className="flex h-10 w-10 items-center justify-center rounded-[3px] text-stone-500 hover:bg-white disabled:opacity-30"><ArrowDown className="h-4 w-4" /></button>
-                <button type="button" onClick={() => onChange(value.filter((_, j) => j !== i))} aria-label="Hapus item" className="flex h-10 w-10 items-center justify-center rounded-[3px] text-red-600 hover:bg-red-50"><X className="h-4 w-4" /></button>
+                <button type="button" onClick={() => move(i, -1)} disabled={i === 0} aria-label="Naikkan" className="flex h-10 w-10 items-center justify-center rounded-lg text-stone-500 hover:bg-white disabled:opacity-30"><ArrowUp className="h-4 w-4" /></button>
+                <button type="button" onClick={() => move(i, 1)} disabled={i === value.length - 1} aria-label="Turunkan" className="flex h-10 w-10 items-center justify-center rounded-lg text-stone-500 hover:bg-white disabled:opacity-30"><ArrowDown className="h-4 w-4" /></button>
+                <button type="button" onClick={() => onChange(value.filter((_, j) => j !== i))} aria-label="Hapus item" className="flex h-10 w-10 items-center justify-center rounded-lg text-red-600 hover:bg-red-50"><X className="h-4 w-4" /></button>
               </div>
             </li>
           ))}
         </ul>
       )}
       <div className="mt-2 flex flex-wrap items-center gap-2">
-        <button type="button" onClick={() => onChange([...value, { label: '', value: '' }])} className="inline-flex h-10 items-center gap-1.5 rounded-[3px] border border-dashed border-stone-400 px-3 text-sm font-semibold text-stone-700 hover:bg-stone-50">
+        <button type="button" onClick={() => onChange([...value, { label: '', value: '' }])} className="inline-flex h-10 items-center gap-1.5 rounded-lg border border-dashed border-stone-400 px-3 text-sm font-semibold text-stone-700 hover:bg-stone-50">
           <Plus className="h-4 w-4" aria-hidden /> Tambah item
         </button>
         <span className="text-xs text-stone-500">Cepat:</span>

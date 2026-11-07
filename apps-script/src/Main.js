@@ -33,7 +33,9 @@ function getRoutes_() {
     'auth.loginFailed': AuthHandlers.loginFailed,
     'auth.loginSucceeded': AuthHandlers.loginSucceeded,
     'admins.get': AuthHandlers.getAdmin,
-    'admins.changePassword': AuthHandlers.changePassword
+    'admins.changePassword': AuthHandlers.changePassword,
+    'analytics.track': AnalyticsHandlers.track,
+    'analytics.summary': AnalyticsHandlers.summary
   };
   CRUD_TABLES.forEach(function (table) {
     var h = crudHandlers(table);

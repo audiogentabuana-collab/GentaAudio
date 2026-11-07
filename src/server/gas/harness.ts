@@ -119,6 +119,16 @@ class FakeSheet {
     this.alive();
     this.data.splice(i - 1, 1);
   }
+  deleteRows(start: number, count: number) {
+    this.alive();
+    this.data.splice(start - 1, count);
+  }
+  appendRow(values: unknown[]) {
+    this.alive();
+    const row = this.getLastRow() + 1;
+    this.getRange(row, 1, 1, values.length).setValues([values]);
+    return this;
+  }
   setFrozenRows() {
     this.alive();
     return this;
@@ -351,6 +361,9 @@ export function createGasRuntime(
       newTrigger: (handler: string) => ({
         forSpreadsheet: () => ({
           onEdit: () => ({ create: () => triggers.push({ handler }) }),
+        }),
+        timeBased: () => ({
+          everyHours: () => ({ create: () => triggers.push({ handler }) }),
         }),
       }),
     },

@@ -217,3 +217,31 @@ test.describe('admin', () => {
     await expect(page).toHaveURL(/\/admin\/login/);
   });
 });
+
+test.describe('analitik', () => {
+  test('kunjungan & klik WhatsApp paket tercatat dan tampil di dashboard', async ({ page, context }) => {
+    await context.route('https://wa.me/**', (r) => r.fulfill({ status: 200, contentType: 'text/plain', body: 'ok' }));
+    const beacon = page.waitForRequest((r) => r.url().endsWith('/api/t') && r.method() === 'POST');
+    await page.goto('/pricelist', { waitUntil: 'networkidle' });
+    await beacon;
+
+    const popup = page.waitForEvent('popup');
+    const click = page.waitForRequest((r) => r.url().endsWith('/api/t') && (r.postData() ?? '').includes('wa_click'));
+    await page.getByRole('link', { name: 'Pesan Paket Hajatan Standar via WhatsApp' }).click();
+    expect(JSON.parse((await click).postData()!)).toMatchObject({ type: 'wa_click', pkg: 'paket-hajatan-standar' });
+    await (await popup).close();
+    await page.waitForTimeout(1500); // diteruskan ke Apps Script setelah respons (after)
+
+    await login(page);
+    await expect(page.getByLabel('Paket paling diminati').getByText('Paket Hajatan Standar')).toBeVisible();
+    await expect(page.getByLabel('Halaman terpopuler').getByText('Daftar harga')).toBeVisible();
+    await expect(page.getByRole('tab', { name: 'Klik WhatsApp' })).toBeVisible();
+  });
+
+  test('endpoint pencatat menolak data tidak valid & mengabaikan bot', async ({ request }) => {
+    expect((await request.post('/api/t', { data: { type: 'hack', path: '/' } })).status()).toBe(400);
+    expect((await request.post('/api/t', { data: { type: 'view', path: 'https://evil' } })).status()).toBe(400);
+    const bot = await request.post('/api/t', { data: { type: 'view', path: '/' }, headers: { 'user-agent': 'Googlebot/2.1' } });
+    expect(bot.status()).toBe(204);
+  });
+});
