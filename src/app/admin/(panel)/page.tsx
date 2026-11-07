@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowDownRight, ArrowUpRight, Check, Circle, MousePointerClick, Eye, Percent, Users } from 'lucide-react';
 import { adminAnalytics, adminList, adminSettings } from '@/server/data/admin';
+import { GasError } from '@/server/gas/client';
+import type { AnalyticsSummary } from '@/features/content/types';
 import { Card, PageHeader } from '@/features/admin/components/ui';
 import { RefreshCacheButton } from '@/features/admin/components/RefreshCacheButton';
 import { AnalyticsChart } from '@/features/admin/components/AnalyticsChart';
@@ -84,10 +86,49 @@ function sourceName(host: string) {
   return SOURCE_NAMES.find(([re]) => re.test(host))?.[1] ?? host;
 }
 
+/** Statistik kosong — dipakai bila analitik gagal dimuat agar dashboard tetap tampil. */
+function emptySummary(days: number): AnalyticsSummary {
+  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jakarta' }).format(new Date());
+  const base = Date.parse(today + 'T00:00:00Z');
+  const series = Array.from({ length: days }, (_, i) => ({
+    date: new Date(base - (days - 1 - i) * 86400000).toISOString().slice(0, 10),
+    views: 0,
+    visitors: 0,
+    wa_clicks: 0,
+  }));
+  const zero = { views: 0, visitors: 0, wa_clicks: 0 };
+  return { range: { from: series[0].date, to: today, days }, series, totals: zero, previous: zero, pages: [], refs: [], devices: {}, packages: [] };
+}
+
+async function loadAnalytics(days: number): Promise<{ data: AnalyticsSummary; error: string | null }> {
+  try {
+    return { data: await adminAnalytics(days), error: null };
+  } catch (err) {
+    const code = err instanceof GasError ? err.code : 'ERROR';
+    console.error('[dashboard] analitik gagal dimuat:', code, (err as Error).message);
+    return { data: emptySummary(days), error: code };
+  }
+}
+
+function AnalyticsNotice({ code }: { code: string }) {
+  const msg =
+    code === 'NOT_FOUND'
+      ? 'Statistik belum aktif karena Apps Script yang online masih versi lama. Jalankan “npm run gas:push”, jalankan fungsi setup sekali di editor Apps Script, lalu Terapkan → Kelola deployment → ikon pensil → Versi: Versi baru → Terapkan.'
+      : code === 'CONFIG'
+        ? 'Sheet statistik belum dibuat. Buka editor Apps Script, pilih fungsi setup, lalu klik Jalankan sekali.'
+        : `Statistik gagal dimuat (kode ${code}). Konten lain tetap bisa dikelola. Coba muat ulang halaman beberapa saat lagi.`;
+  return (
+    <div role="status" className="mb-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+      <p className="font-medium">Statistik website belum bisa ditampilkan</p>
+      <p className="mt-1">{msg}</p>
+    </div>
+  );
+}
+
 export default async function DashboardPage({ searchParams }: PageProps<'/admin'>) {
   const sp = await searchParams;
   const days = PERIODS.includes(Number(sp.hari) as (typeof PERIODS)[number]) ? Number(sp.hari) : 30;
-  const [a, s, packages, gallery] = await Promise.all([adminAnalytics(days), adminSettings(), adminList('packages'), adminList('gallery')]);
+  const [{ data: a, error: analyticsError }, s, packages, gallery] = await Promise.all([loadAnalytics(days), adminSettings(), adminList('packages'), adminList('gallery')]);
 
   const rate = a.totals.visitors ? (a.totals.wa_clicks / a.totals.visitors) * 100 : 0;
   const prevRate = a.previous.visitors ? (a.previous.wa_clicks / a.previous.visitors) * 100 : 0;
@@ -152,6 +193,8 @@ export default async function DashboardPage({ searchParams }: PageProps<'/admin'
           </div>
         }
       />
+
+      {analyticsError && <AnalyticsNotice code={analyticsError} />}
 
       {/* KPI */}
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">

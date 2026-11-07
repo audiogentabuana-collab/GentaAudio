@@ -116,7 +116,7 @@ export async function gas<T = unknown>(action: string, payload: Record<string, u
         console.error(`[gas] ${action} error`, err);
         throw new GasError('INTERNAL', 'Terjadi kesalahan saat memproses data.');
       }
-      if (code === 'CONFIG' || code === 'UNAUTHORIZED' || code === 'BAD_RESPONSE' || code === 'INTERNAL') {
+      if (code !== 'VALIDATION' && code !== 'RATE_LIMITED') {
         console.error(`[gas] ${action} ${code}: ${err.message}`);
       }
       throw err;
